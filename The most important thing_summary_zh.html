@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投資最重要的事 — 深度學習筆記</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a7a5a;
+  --green-light: #e8f5ef;
+  --green-mid: #9fccb4;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --text: #1c1c1c;
+  --text-sec: #555;
+  --text-mute: #999;
+  --border: #e5e5e5;
+  --bg: #faf9f7;
+  --white: #fff;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; font-size: 15px; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.nav-title { font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: var(--green); }
+.nav-meta { font-size: 11px; color: var(--text-mute); }
+
+/* HERO */
+.hero { background: var(--white); padding: 4rem 2rem 3rem; text-align: center; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 1.2rem; }
+.hero-title { font-family: 'Noto Serif TC', serif; font-size: 2.6rem; font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 0.6rem; }
+.hero-author { font-size: 1rem; color: var(--text-sec); margin-bottom: 0.3rem; }
+.hero-org { font-size: 13px; color: var(--text-mute); margin-bottom: 2rem; }
+.hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-n { font-family: 'Noto Serif TC', serif; font-size: 2rem; font-weight: 700; color: var(--green); }
+.stat-l { font-size: 11px; color: var(--text-mute); letter-spacing: 0.08em; margin-top: 2px; }
+
+/* PRAISE */
+.praise { max-width: 700px; margin: 2.5rem auto; padding: 0 1.5rem; }
+.praise-card { background: var(--gold-light); border: 1px solid #e8d89a; border-radius: var(--radius); padding: 1.5rem 2rem; }
+.praise-text { font-family: 'Noto Serif TC', serif; font-size: 15px; color: #5a4a1a; line-height: 1.9; font-style: italic; }
+.praise-from { font-size: 12px; color: #8a7030; margin-top: 0.75rem; font-weight: 600; }
+
+/* CONTENT AREA */
+.content { max-width: 700px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+/* PART DIVIDER */
+.part-div { display: flex; align-items: center; gap: 1rem; margin: 3rem 0 1.5rem; }
+.part-line { flex: 1; height: 1px; background: var(--border); }
+.part-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); background: var(--green); padding: 0.4rem 1rem; border-radius: 20px; white-space: nowrap; }
+
+/* CHAPTER CARD */
+.ch { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+.ch:hover { border-color: var(--green-mid); }
+.ch.open { border-color: var(--green); }
+.ch-head { padding: 1.4rem 1.5rem; cursor: pointer; display: flex; align-items: flex-start; gap: 1.2rem; }
+.ch-num { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-mute); padding-top: 3px; min-width: 3.5rem; }
+.ch-meta { flex: 1; }
+.ch-title { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.ch-sub { font-size: 12px; color: var(--text-mute); margin-top: 4px; }
+.ch-arr { font-size: 18px; color: #ccc; transition: transform 0.25s; padding-top: 1px; }
+.ch.open .ch-arr { transform: rotate(180deg); }
+
+/* CHAPTER BODY */
+.ch-body { display: none; border-top: 1px solid var(--border); }
+.ch-body.open { display: block; }
+
+/* STORY */
+.story { padding: 1.5rem 1.5rem 0; }
+.section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--green-light); }
+.story-text { font-size: 14px; color: var(--text-sec); line-height: 1.9; margin-bottom: 1rem; }
+.story-text strong { color: var(--text); font-weight: 600; }
+.story-block { background: var(--green-light); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; margin: 0.75rem 0 1rem; font-size: 13px; color: #2d5a45; line-height: 1.8; }
+
+/* QUOTES */
+.quotes-wrap { padding: 0 1.5rem; }
+.quote-item { border-top: 1px dashed var(--border); padding: 1rem 0; }
+.quote-item:last-child { border-bottom: 1px dashed var(--border); }
+.quote-zh { font-family: 'Noto Serif TC', serif; font-size: 14px; color: var(--text); line-height: 1.9; font-style: italic; }
+.quote-en { font-size: 12px; color: var(--text-mute); margin-top: 0.4rem; line-height: 1.7; font-style: italic; }
+.quote-from { font-size: 11px; color: var(--gold); font-weight: 600; margin-top: 0.4rem; }
+
+/* KEY POINTS */
+.kp-wrap { padding: 0 1.5rem; }
+.kp-list { list-style: none; }
+.kp-item { display: flex; gap: 0.75rem; padding: 0.55rem 0; border-bottom: 1px solid #f0f0f0; }
+.kp-item:last-child { border-bottom: none; }
+.kp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-top: 8px; flex-shrink: 0; }
+.kp-text { font-size: 13px; color: var(--text-sec); line-height: 1.8; }
+.kp-text strong { color: var(--text); font-weight: 600; }
+
+/* CONCEPT DIAGRAM */
+.diagram { padding: 0 1.5rem; }
+.diagram-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; font-size: 13px; }
+.diagram-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.4rem 0; flex-wrap: wrap; }
+.d-tag { background: var(--green-light); color: var(--green); border-radius: 6px; padding: 0.3rem 0.8rem; font-size: 12px; font-weight: 600; }
+.d-arrow { color: var(--text-mute); font-size: 14px; }
+.d-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.d-col { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
+.d-col-title { font-size: 11px; font-weight: 700; color: var(--text-mute); letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.d-col-item { font-size: 12px; color: var(--text-sec); padding: 0.2rem 0; }
+.d-flow { display: flex; flex-direction: column; gap: 0.5rem; }
+.d-step { display: flex; align-items: center; gap: 0.6rem; }
+.d-num { width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.d-txt { font-size: 12px; color: var(--text-sec); }
+
+/* TAKEAWAY */
+.takeaway { margin: 1.5rem 1.5rem 1.5rem; background: linear-gradient(135deg, #1a7a5a 0%, #0d5c42 100%); border-radius: 10px; padding: 1.25rem 1.5rem; }
+.takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+.takeaway-text { font-family: 'Noto Serif TC', serif; font-size: 14px; color: white; line-height: 1.9; }
+
+/* FOOTER */
+footer { text-align: center; padding: 3rem 1.5rem; color: var(--text-mute); font-size: 12px; border-top: 1px solid var(--border); background: var(--white); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">投資最重要的事</span>
+  <span class="nav-meta">霍華．馬克斯 · 深度學習筆記</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">深度學習筆記</div>
+  <div class="hero-title">投資最重要的事</div>
+  <div class="hero-author">霍華．馬克斯 Howard Marks</div>
+  <div class="hero-org">橡樹資本管理公司 Oaktree Capital Management 創辦人</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">21</div><div class="stat-l">核心章節</div></div>
+    <div class="stat"><div class="stat-n">261</div><div class="stat-l">原著頁數</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">大主題</div></div>
+    <div class="stat"><div class="stat-n">30+</div><div class="stat-l">年投資智慧</div></div>
+  </div>
+</div>
+
+<div class="praise">
+  <div class="praise-card">
+    <div class="praise-text">「只要在郵件信箱裡看到霍華．馬克斯的投資備忘錄，我會馬上打開與閱讀。我總是會從中學到一些事情，他的書我讀了兩遍。」</div>
+    <div class="praise-from">—— 華倫．巴菲特，波克夏海瑟威董事長暨執行長</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PART I -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART I · 思考框架</div><div class="part-line"></div></div>
+
+<!-- CH1 -->
+<div class="ch" id="ch1">
+  <div class="ch-head" onclick="toggle('ch1')">
+    <div class="ch-num">CHAPTER 01</div>
+    <div class="ch-meta">
+      <div class="ch-title">學習第二層思考</div>
+      <div class="ch-sub">打敗市場，需要與眾不同又更正確的洞察力</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯開宗明義說：<strong>投資不是科學，是藝術。</strong>沒有一條規則永遠有效，因為環境不斷改變，而且一旦有人照搬某個方法，它的效果就會大打折扣。</div>
+      <div class="story-text">他用一個概念貫穿全書：<strong>第一層思考 vs 第二層思考</strong>。要打敗市場，你的看法不只要正確，還要與市場共識不同。</div>
+      <div class="story-block">
+        第一層思考：「這是好公司，買！」<br>
+        第二層思考：「這是好公司，但每個人都這樣認為，股價已被高估——賣！」
+      </div>
+      <div class="story-text">第二層思考需要考慮：<strong>可能的結果範圍、自己的看法、市場共識是什麼、兩者差異有多大，以及市場的心態是否過於樂觀或悲觀。</strong>這比第一層思考複雜得多，能做到的人少之又少，這也是為什麼能持續打敗市場的人如此稀少。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「投資並不容易，認為投資很容易的人都是傻瓜。」</div>
+        <div class="quote-from">—— 查理．蒙格，波克夏海瑟威副董事長</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「做對事情也許是成功投資的必要條件，但不是充分條件。你必須比其他人做對更多事，這意味著你的思考方式必須與眾不同。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>第一層思考人人都能做到</strong>——正因如此，它只能帶來平均報酬，無法打敗市場。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>打敗市場需要兩個條件</strong>：你的看法與共識不同，而且你的看法更正確。兩者缺一不可。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>投資是藝術而非科學</strong>——無法簡化成邏輯運算，必須靠直覺和不斷調適，而非機械化操作。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>洞察力難以訓練</strong>——就像籃球場上「身高無法訓練」，投資洞察力某程度上是先天的，但可以培養。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>每個人都能得到市場平均報酬</strong>——只要買指數基金即可。主動投資的意義，在於追求超越平均的表現。</div></li>
+      </ul>
+    </div>
+
+    <div class="diagram" style="padding-top:1.5rem;">
+      <div class="section-label">🧠 概念圖解：第一層 vs 第二層思考</div>
+      <div class="diagram-box">
+        <div class="d-vs">
+          <div class="d-col">
+            <div class="d-col-title">第一層思考 ❌</div>
+            <div class="d-col-item">「這是好公司」→ 買</div>
+            <div class="d-col-item">「前景差」→ 賣</div>
+            <div class="d-col-item">「盈餘下降」→ 賣</div>
+            <div class="d-col-item" style="color:#aaa;font-size:11px;margin-top:6px;">簡單、人人做得到</div>
+          </div>
+          <div class="d-col" style="border-color: var(--green-mid);">
+            <div class="d-col-title" style="color:var(--green);">第二層思考 ✓</div>
+            <div class="d-col-item">「人人說好→高估」→ 賣</div>
+            <div class="d-col-item">「恐慌→超賣」→ 買</div>
+            <div class="d-col-item">「跌幅<預期→驚喜」→ 買</div>
+            <div class="d-col-item" style="color:var(--green);font-size:11px;margin-top:6px;">深入、複雜、稀有</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">不要問「這是好公司嗎？」要問「市場對這公司的看法是否過於樂觀或悲觀？」——差異思維，才是超額報酬的來源。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH2 -->
+<div class="ch" id="ch2">
+  <div class="ch-head" onclick="toggle('ch2')">
+    <div class="ch-num">CHAPTER 02</div>
+    <div class="ch-meta">
+      <div class="ch-title">了解效率市場與局限</div>
+      <div class="ch-sub">市場整合資訊很快，但不代表市場永遠正確</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">一九六〇年代，芝加哥學派提出<strong>效率市場假說</strong>：因為大量聰明的投資人同時分析資訊，資產價格始終反映公平價值，任何人都無法持續打敗市場。這個理論催生了指數型基金的誕生。</div>
+      <div class="story-text">馬克斯部分同意：市場確實<strong>快速整合資訊</strong>。但他不同意「市場共識必然正確」。他的反例是雅虎股價：2000年1月為237美元，2001年4月為11美元——<strong>兩個時間點不可能都是對的。</strong></div>
+      <div class="story-block">
+        效率市場假說最大的問題：它假設人類是理性的。<br>
+        但市場是由人組成的，而人有情緒、有偏見、會犯錯、會羊群效應。<br>
+        這些「人性弱點」創造了短暫的市場無效率——也就是投資機會。
+      </div>
+      <div class="story-text">馬克斯的結論：<strong>主流大型股票市場相對有效率，難以打敗。但在冷門、被忽視的市場角落，無效率更容易出現</strong>，這正是他橡樹資本專注的地方——高收益債券、不良資產等。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「如果在效率市場，分享市場共識的看法只會讓你賺到平均報酬。為了打敗市場，你必須有獨特或與市場共識不同的看法。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>效率市場：快速整合，未必正確</strong>——馬克斯認同「資訊反映快」，但不認同「共識永遠對」。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>指數基金興起的邏輯</strong>——如果專業基金都無法持續打敗大盤，為何付費給主動型基金經理人？</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>打敗市場的唯一方法</strong>——擁有市場沒有的資訊，或是對相同資訊做出更準確的詮釋。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>市場越不受關注，越可能無效率</strong>——大型藍籌股被無數分析師盯著，邊緣市場才更容易找到被低估的機會。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>高風險不等於高報酬</strong>——若高風險投資可靠地創造高報酬，它就不危險了；風險溢酬只是補償，不是保證。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">市場快速整合資訊，但市場共識不代表正確。了解效率市場的局限，才能知道哪裡有機會、哪裡只是幻覺。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH3 -->
+<div class="ch" id="ch3">
+  <div class="ch-head" onclick="toggle('ch3')">
+    <div class="ch-num">CHAPTER 03</div>
+    <div class="ch-meta">
+      <div class="ch-title">準確估計實質價值</div>
+      <div class="ch-sub">低買高賣的前提：你得先知道「高」和「低」的標準在哪裡</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">「低買高賣」人人都知道，但真正的問題是：<strong>什麼是高？什麼是低？</strong>答案只有一個：對照資產的<strong>實質價值（Intrinsic Value）</strong>。低於實質價值就買，高於實質價值就賣。</div>
+      <div class="story-text">馬克斯完全否定技術分析。他引用隨機漫步假說：<strong>過去的股價走勢對預測未來毫無幫助</strong>，就像連續十次擲出人頭，下一次還是50%機率。當沖交易者靠猜測股價短期走勢，就像猜下個轉角出現的人是男是女，毫無根據。</div>
+      <div class="story-block">
+        價值投資的核心邏輯：<br>
+        一家公司的價值 = 現金 + 有形資產 + 創造現金流的能力 + 增值潛力。<br>
+        當市場價格低於這個估算值時，才是真正的「便宜」。
+      </div>
+      <div class="story-text">他區分了<strong>價值投資（Value Investing）</strong>和<strong>成長股投資（Growth Investing）</strong>的差別：價值投資強調「現在值多少」，成長投資強調「未來可能值多少」。兩者本身沒有對錯，但都必須以估值為起點，而非僅靠直覺或趨勢。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「準確估計實質價值是不可或缺的起點。如果做不到這點，想要持續成功的希望就只是希望而已。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「最重要的學科不是會計學或經濟學，而是心理學。關鍵在於，現在誰喜歡這項投資，而誰又不喜歡。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>實質價值是一切的錨</strong>——沒有估值，就無法判斷貴還是便宜，所有分析都是空中樓閣。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>技術分析不可靠</strong>——過去股價走勢對未來無預測力，依賴它就像開車只看後照鏡。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>順勢投資的致命缺陷</strong>——賀伯．史坦定律：「如果某個東西無法永遠持續下去，那就會停止。」追漲的人終究被套。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>短期價格受心理面主導</strong>——基本面決定長期價值，但短期價格可以偏離很遠，這就是機會與風險的來源。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>最安全的買點</strong>——在沒有人喜歡的時候買進；等到投資標的受歡迎，價格只有一條路——上漲。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">沒有實質價值的估算，就沒有「便宜」的概念——一切所謂的「投資機會」都只是猜測。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH4 -->
+<div class="ch" id="ch4">
+  <div class="ch-head" onclick="toggle('ch4')">
+    <div class="ch-num">CHAPTER 04</div>
+    <div class="ch-meta">
+      <div class="ch-title">找出價格與價值的關係</div>
+      <div class="ch-sub">成功不是「買到好東西」，而是「東西買得好」</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">即使你對一家公司的估值完全正確，投資還沒完——你還必須以<strong>低於或接近實質價值的價格買進</strong>。好公司不等於好投資，關鍵永遠是你付了多少錢。</div>
+      <div class="story-text">最典型的例子是<strong>漂亮五十（Nifty Fifty）</strong>：1970年代初，市場瘋狂追捧美國50家頂級公司，本益比被推到80至90倍（戰後平均只有15倍）。然後股市冷卻，這些公司的本益比跌回8至9倍——買進者損失了九成資金。他們買到了世界上最好的公司，但在錯誤的價格買進。</div>
+      <div class="story-block">
+        橡樹資本名言：「買得好，就等於成功賣出一半。」<br>
+        意思是：只要買入價夠低，賣出的時機、方式和價格這些問題都會自然解答——市場最終會向實質價值靠攏。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「沒有一種資產天生就有高報酬，只有在價格對的時候才有吸引力。不問價格就無法判斷是好投資還是壞投資。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「投資是一種人氣競賽，而最危險的事就是在投資人氣最高的時候買進。最安全且獲利潛力最大的投資，是在沒有人喜歡的時候買進。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>好公司 ≠ 好投資</strong>——再好的公司，若買入價格過高，都會成為虧損投資。價格才是一切。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>漂亮五十的教訓</strong>——本益比80-90倍買入頂級公司，幾年後本益比跌至8-9倍，損失九成。買的是最好的公司，卻在最壞的價格。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>技術面和心理面短期主導價格</strong>——強制賣家（追繳保證金）和強制買家（基金資金流入）都會使價格偏離基本面，製造機會。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>買在「強制賣家」出現時</strong>——這是橡樹資本最好的交易來源：市場恐慌時不問價格被迫拋售的資產。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>確保不成為強制賣家</strong>——最糟糕的事是在最艱困時刻被迫賣出，這需要長期資金和強大的心理素質。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">買到好公司不算本事——在正確的價格買進才是。「買得好，就等於成功賣出一半」，一切始於買入價。</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART II -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART II · 理解與控制風險</div><div class="part-line"></div></div>
+
+<!-- CH5 -->
+<div class="ch" id="ch5">
+  <div class="ch-head" onclick="toggle('ch5')">
+    <div class="ch-num">CHAPTER 05</div>
+    <div class="ch-meta">
+      <div class="ch-title">理解風險</div>
+      <div class="ch-sub">風險不等於波動性——真正的風險是永久損失本金的可能</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">學術界將風險定義為<strong>波動性（β值）</strong>，因為它可以量化和計算。但馬克斯強烈不同意。他說，在橡樹資本從沒聽過有人說：「我不要買它，因為它的價格波動可能很大。」真正讓投資人害怕的，是<strong>永久損失本金，或是報酬低到無法接受</strong>。</div>
+      <div class="story-block">
+        風險的三個理由為何重要：<br>
+        1. 風險是壞事，理性的人想避開——因此需要更高的預期報酬來補償。<br>
+        2. 評估投資時，必須考慮風險與報酬的關係——報酬只說了一半的故事。<br>
+        3. 同樣的報酬，風險不同，價值完全不同——「風險調整後報酬」才是衡量標準。
+      </div>
+      <div class="story-text">最重要的反直覺概念：<strong>高風險不保證高報酬。</strong>正確的說法是：高風險的投資必須提供更高的「預期報酬」，但預期不等於實現。風險越高，結果的分布越廣——包括更高的獲利可能，也包括更大的虧損可能。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「風險意味著可能發生的事，比即將發生的事還多。」</div>
+        <div class="quote-from">—— 艾爾洛伊．丁姆森，倫敦商學院教授</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「如果高風險投資可以可靠的創造高收益，那他們的風險就不高了！高風險的投資必須提供更高的潛在報酬，但絕不表示更高的潛在報酬一定會實現。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>波動性 ≠ 風險</strong>——波動性是可測量的代理指標，但真正的風險是本金永久損失的機率。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>高風險只保證更大的不確定性</strong>——結果的分布更寬，可能更高，也可能更低，甚至歸零。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>報酬只說了一半</strong>——10%的報酬，若承擔了巨大風險，遠不如5%的無風險報酬有價值。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>風險調整後報酬是真正的標準</strong>——評估任何投資，必須同時考量報酬和所冒的風險。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>風險管理是投資的核心</strong>——找到持續上漲的投資不難，但若沒有正確處理風險，投資不可能長久成功。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">「高風險帶來高報酬」是危險的謬誤——高風險只帶來更不確定的結果。真正的問題是：你獲得的報酬，值得你承擔的風險嗎？</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH6 -->
+<div class="ch" id="ch6">
+  <div class="ch-head" onclick="toggle('ch6')">
+    <div class="ch-num">CHAPTER 06</div>
+    <div class="ch-meta">
+      <div class="ch-title">確認風險</div>
+      <div class="ch-sub">風險最高的時刻，恰恰是大家認為最安全的時候</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">大多數人認為：<strong>經濟衰退時風險高，繁榮時風險低</strong>。馬克斯說這完全倒反了。繁榮時期，投資人樂觀、掉以輕心，願意以過高的價格買進——這才是風險的真正來源。</div>
+      <div class="story-text">他的核心邏輯：<strong>高風險主要來自高價買進</strong>。當市場推高，進場價格意味著出現虧損而非預期報酬時，風險就上升了。「普遍相信沒有風險」，本身就是最少見的高風險狀態。</div>
+      <div class="story-block">
+        一個悖論：當投資人不害怕風險時，風險反而最高。<br>
+        因為：沒有風險趨避 → 不要求風險溢酬 → 資產被高估 → 未來報酬偏低 → 虧損風險上升。<br>
+        「風險消失」的神話是泡沫的主要成因。
+      </div>
+      <div class="story-text">馬克斯在書中揭露一個2005-2007年流行的神話清單：「全球化讓風險分散」、「證券化消滅了風險」、「電腦模型讓風險更可控」……<strong>這些說法的每一條，都在2008年被現實打臉</strong>。風險不能消除，只能轉移和分散。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「普遍相信沒有風險，就是很少見的高風險。只有投資人適當的規避風險，預期報酬才會內含適當的風險溢酬。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「雪崩專家知道，更安全的裝備會誘使登山客冒更大的風險——這種道德風險，實際上讓他們更不安全。」</div>
+        <div class="quote-from">—— 《退休基金與投資》雜誌</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>繁榮時風險最高</strong>——因為金融失衡逐漸累積，而人們卻最不擔心風險。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>確認風險從觀察人心開始</strong>——投資人掉以輕心、過於樂觀、對資產出價過高，就是風險警報響起的時刻。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>風險只會分散，不會消失</strong>——每一次「風險已被消除」的說法，都是泡沫前夕最危險的幻覺。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>高風險來自高價買進</strong>——理論家認為風險與報酬各自獨立，但馬克斯認為高風險和低預期報酬是一體兩面，源自高買。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「道德風險」加速危機</strong>——越多保護措施讓人覺得安全，反而誘使更大膽的冒險行為，結果讓整體更危險。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">當所有人都說「這次不一樣，風險已消失」——那正是風險最高的時刻。確認風險的第一步，是觀察投資人是否已忘記了恐懼。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH7 -->
+<div class="ch" id="ch7">
+  <div class="ch-head" onclick="toggle('ch7')">
+    <div class="ch-num">CHAPTER 07</div>
+    <div class="ch-meta">
+      <div class="ch-title">控制風險</div>
+      <div class="ch-sub">真正傑出的投資人，特點是在賺取報酬的同時控制了風險</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">報紙上照片登的是那些賺了大錢的人，卻很少有人問他們承擔了多少風險。<strong>在高風險下賺得高報酬，沒什麼好稱許的</strong>——除非這個人能年復一年地做到，那才證明了真正的技巧。</div>
+      <div class="story-text">馬克斯用一個比喻說明風險的隱形本質：<strong>病菌本身不是疾病，只有碰到人體才發病。</strong>同理，風險是事情出錯時造成的潛在虧損——只有環境出現負面事件時，風險才會以虧損的形式顯現。多頭行情中，風險是看不見的，但它一直存在。</div>
+      <div class="story-block">
+        巴菲特的名言：「潮水退去後，才會知道誰在裸泳。」<br>
+        多頭行情時，控制風險是「隱形的」——不會有人讚賞你「承擔了較少的風險」。<br>
+        但只有空頭來臨時，才能看出誰真正在控制風險。
+      </div>
+      <div class="story-text">橡樹資本的定義是：真正傑出的投資人是那些在<strong>賺得相同報酬下承擔較少風險</strong>的人，或是在<strong>相同風險下賺得更高報酬</strong>的人。這種細微的成就難以量化，但長期複利效應巨大。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「追根究柢，投資人的工作就是為了獲利而聰明的承擔風險，最好的投資人與其他人的區別就在於能把這件事做好。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「就算虧損沒發生，風險還是可能存在。因此，沒有虧損不一定表示建構的投資組合是安全的。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>控制風險的報酬是隱形的</strong>——在多頭行情，沒有人因為「承擔了較少風險」而被稱讚，但空頭才見真章。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>沒有虧損 ≠ 沒有風險</strong>——風險就像潛伏的病菌，只有在逆境到來時才以虧損形式顯現。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>真正的優異是「風險調整後」</strong>——高風險高報酬無法持久；真正的技巧是在低風險下取得好報酬。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>巴菲特、林區的共同點</strong>——他們的卓越不只在於高報酬，更在於數十年來穩定、沒有嚴重虧損的紀錄。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>買了保險但沒發生火災</strong>——謹慎的投資人在多頭市場知道自己受到保障，即使保障看起來「沒必要」。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">風險控制在多頭行情是隱形的，但在空頭時才是最重要的。真正的投資技巧，不是賺了多少，而是在承擔多少風險下賺了多少。</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART III -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART III · 市場心理與周期</div><div class="part-line"></div></div>
+
+<!-- CH8 -->
+<div class="ch" id="ch8">
+  <div class="ch-head" onclick="toggle('ch8')">
+    <div class="ch-num">CHAPTER 08</div>
+    <div class="ch-meta">
+      <div class="ch-title">注意景氣循環</div>
+      <div class="ch-sub">周期永遠存在；在別人忘記這點時，正是最大的機會</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯只有兩條關於周期的不變法則：<strong>法則一：多數事物都有周期。法則二：在其他人忘記法則一時，就是產生獲利和虧損最大的機會。</strong></div>
+      <div class="story-text">為什麼世界有周期？因為有人類參與。機器可以直線運作，但人有情緒、反覆無常——當人們樂觀時，花錢更多、借錢更多、出更高的價格；當悲觀時，一切反轉。<strong>周期的高低點，主要來自人的情緒波動</strong>，而非客觀的經濟條件。</div>
+      <div class="story-text">他特別強調<strong>信用循環（Credit Cycle）</strong>：景氣好時，銀行放款標準降低，資金流向不合格的借款人；資金耗損後，銀行急剎車，甚至只貸款給最優質的客戶。這個過程在歷史上不斷重演——1989房地產、1998長期資本管理公司、1999科技泡沫、2007信貸危機，每一次都是同樣的劇本。</div>
+      <div class="story-block">
+        周期最重要的性質：「周期會自我修正，而且不必依賴外部事件就能反轉。」<br>
+        成功本身帶著失敗的種子——繁榮導致過度放款，過度放款導致虧損，虧損導致緊縮。<br>
+        失敗也帶著成功的種子——緊縮製造低價，低價吸引反向投資人，反向投資人推動復甦。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「周期最後總是會占到優勢，沒有什麼東西可以永遠朝著同個方向前進，樹木不會直直穿過天際。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「如果你建好球場，他們就會來。」在金融界，如果你提供便宜資金，他們就會來借錢、買東西，通常會漫無章法，產生非常負面的後果。</div>
+        <div class="quote-from">—— 《夢幻成真》比喻，馬克斯引用</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>周期的根源是人性</strong>——情緒、樂觀、悲觀使得事物不能直線發展，有起必有落。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>信用循環是最強的周期</strong>——資金的寬鬆與緊縮放大了一切，製造最極端的機會與風險。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>周期會自我修正</strong>——不需要外部衝擊，繁榮本身就埋下崩盤的種子，反之亦然。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「最糟的貸款在經濟最好時產生」</strong>——信用標準最寬鬆的時刻，恰是風險最高的時刻。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>無法預測，但可以準備</strong>——我們不知道周期何時轉折，但可以了解現在的位置，為可能的發展做好準備。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">「你不能預測，但可以做好準備。」——了解周期的必然性，在別人忘記時保持清醒，這才是周期給聰明投資人的禮物。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH9 -->
+<div class="ch" id="ch9">
+  <div class="ch-head" onclick="toggle('ch9')">
+    <div class="ch-num">CHAPTER 09</div>
+    <div class="ch-meta">
+      <div class="ch-title">意識到鐘擺效應</div>
+      <div class="ch-sub">市場在貪婪與恐懼之間不斷擺盪，極少停留在中點</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯用鐘擺來描述投資市場的心理波動。鐘擺的<strong>「平均位置」是中點</strong>，但它幾乎不在那裡停留——它不斷朝兩端擺盪，而且朝一端擺得越用力，反彈的力道就越大。投資市場在以下維度不斷擺動：</div>
+      <div class="story-block">
+        興奮 ←→ 沮喪<br>
+        貪婪 ←→ 恐懼<br>
+        樂觀 ←→ 悲觀<br>
+        輕信 ←→ 多疑<br>
+        害怕錯失機會 ←→ 害怕虧錢
+      </div>
+      <div class="story-text">馬克斯指出多頭市場的三階段：第一，少數有遠見的人認為事情會好轉。第二，多數投資人了解情況確實改善。第三，<strong>所有人相信事情會永遠越來越好。</strong>而市場的頂點，就在「最後一個人願意成為買家」的那一刻——買家全部進場後，市場只有一條路：下跌。</div>
+      <div class="story-text">2005至2007年，害怕錯失機會的恐懼主導了市場，人們忘記了虧損風險；2007至2008年，情況逆轉，害怕虧損的恐懼主導一切，人們即使面對極低的資產價格也不敢買進。<strong>鐘擺從一端飛到另一端，從不在中點停留。</strong></div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「鐘擺幾乎都在兩端來回擺盪，停留在中點的時間很短。向高點擺盪，正是提供鐘擺反轉的動力。」</div>
+        <div class="quote-from">—— 霍華．馬克斯，1991年</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「聰明人總是在一開始先做，最後做的總是傻子。」</div>
+        <div class="quote-from">—— 霍華．馬克斯最愛的投資名言</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>市場很少處於均衡</strong>——投資人的心態長期停留在極端，而非理性的中間位置。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>泡沫的必然特徵：缺乏風險趨避</strong>——當沒有人害怕風險時，資產溢價消失，市場包含更多風險而非報酬。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>崩盤的必然特徵：過度風險趨避</strong>——當所有人都恐慌拋售，即使資產離譜低估，也沒有人願意承接。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>市場頂點的邏輯</strong>——所有買家進場後，再無新買家，市場只能下跌。頂點正是群眾完全認同的那一刻。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>兩種風險的平衡</strong>——虧損的風險與錯失機會的風險，在鐘擺兩端各自主導，無法同時消除兩者。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">市場永遠在貪婪與恐懼間擺盪。了解你現在站在鐘擺的哪一端，就是比大多數人更聰明的開始。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH10 -->
+<div class="ch" id="ch10">
+  <div class="ch-head" onclick="toggle('ch10')">
+    <div class="ch-num">CHAPTER 10</div>
+    <div class="ch-meta">
+      <div class="ch-title">對抗情緒帶來的負面影響</div>
+      <div class="ch-sub">最大的投資偏誤，來自心態而非資訊不足</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">很多人有足夠才智分析資料，但很少人能承受心理面帶來的強大影響。對相同數據，不同的人分析後得到的結論相似，但<strong>最終行動卻因心理因素而截然不同</strong>。最大的投資偏誤不來自資訊，而來自心態。</div>
+      <div class="story-text">馬克斯詳述七種主要的破壞性心態：<strong>貪婪、恐懼、質疑拋諸腦後、從眾、嫉妒、自負、讓步（投降主義）</strong>。其中貪婪最危險，因為它能壓過常識、風險趨避、過去痛苦的記憶，讓人重複犯同樣的錯誤。</div>
+      <div class="story-block">
+        高伯瑞定律：「金融記憶往往極為短暫。」<br>
+        當相似的情況一再發生，年輕一代投資人會將它視為「金融領域的了不起創新」。<br>
+        「這次不一樣」是投資史上最昂貴的四個字。
+      </div>
+      <div class="story-text">他特別警告「靈丹妙藥（Silver Bullet）」的幻覺：每隔一段時間，就有某種方法或資產短期內創造驚人報酬，吸引大量投資人盲目追捧。但<strong>沒有哪個投資策略可以在沒有風險下長期創造高報酬</strong>——世界上沒有免費的午餐。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「貪婪是一股極端強大的力量。它能壓過常識、風險趨避、小心謹慎、邏輯、過去痛苦教訓的記憶。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「沒有什麼事比自欺欺人容易，因為每個人只要有願望，就會相信那是真的。」</div>
+        <div class="quote-from">—— 狄摩西尼，古希臘哲學家（查理．蒙格引用）</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>七種危險心態</strong>：貪婪、恐懼、質疑拋諸腦後、從眾、嫉妒、自負、讓步——每一種都能讓聰明人做出蠢事。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>恐懼是貪婪的對立面，同樣致命</strong>——恐懼令人在低價時拋售，錯失最佳買入機會，或是在應該積極時退縮。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「靈丹妙藥」必然是幻覺</strong>——高報酬短期存在是可能的，但靠這個方法長期發財是不可能的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>利用他人的情緒錯誤</strong>——定價錯誤、認知錯誤和其他人犯下的錯誤，是超越市場績效的唯一途徑。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>金融記憶短暫是周期的根源</strong>——無法記取歷史教訓，讓同樣的泡沫一再出現，只是包裝不同。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">了解自己的心理弱點，比了解財報更重要。能夠在貪婪時謹慎、在恐懼時積極的人，天生就比市場強。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH11 -->
+<div class="ch" id="ch11">
+  <div class="ch-head" onclick="toggle('ch11')">
+    <div class="ch-num">CHAPTER 11</div>
+    <div class="ch-meta">
+      <div class="ch-title">反向投資</div>
+      <div class="ch-sub">在別人恐懼時買進，需要最大的勇氣，但提供最豐厚的回報</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">大多數投資人可以稱為「趨勢追隨者」——在市場上漲時買進，下跌時賣出。這完全合乎人性，但卻是讓人高買低賣的最可靠方式。<strong>市場達到極端高點時，大多數人都是錯的——因為正是他們一起推高了它。</strong></div>
+      <div class="story-text">耶魯大學校產基金的傳奇投資人大衛．史文生，描述反向投資的代價：「成功的投資需要堅定持有與公眾輿論不同而讓人不安的部位。建立和維持非制式的投資組合需要接受一個令人不安的投資組合，即使在傳統智慧的眼中常常顯得太過輕率。」</div>
+      <div class="story-block">
+        反向投資的困難不只是心理的：<br>
+        — 你不知道鐘擺的擺動幅度多大、反轉確切時間<br>
+        — 「價格過高」與「明天就下跌」完全不同，可能撐很久<br>
+        — 當你逆勢時，損失可能在勝利之前先到來<br>
+        — 需要有理解和容忍的客戶，才能撐過漫長的等待
+      </div>
+      <div class="story-text">馬克斯的警告：<strong>只與群眾做相反的事是不夠的</strong>——你還必須知道群眾為什麼是錯的。沒有分析基礎的反向只是賭博，而不是投資。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「在別人沮喪拋售時買進、在別人興奮搶買時賣出，全都需要最大的勇氣，但也會提供最豐厚的獲利。」</div>
+        <div class="quote-from">—— 約翰．坦伯頓爵士</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「當別人愈不謹慎處理他們的事務時，我們就應該愈謹慎處理我們的事務。」</div>
+        <div class="quote-from">—— 華倫．巴菲特</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>市場頂點時，大多數人都是錯的</strong>——因為他們集體推高了它，所有買家進場後，剩下的只有賣壓。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>反向投資在心理上極難執行</strong>——你需要在所有人恐慌時保持冷靜，在所有人亢奮時保持謹慎。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「一生難得一次」的極端每十年出現一次</strong>——2000年科技泡沫、2008年金融危機都是反向投資人的最大機會。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>需要理解和容忍的客戶</strong>——在逆勢期間，沒有支持你的委託人，反向投資策略無法撐到勝利。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>反向不等於一定對</strong>——市場過於高估可能持續很久，「超越時代」與「失敗」在勝利到來前很難區分。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">反向投資不是反對一切，而是在市場極端偏離時，用分析和勇氣做出相反的行動——這是最難的事，也是回報最豐厚的事。</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART IV -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART IV · 投資實踐</div><div class="part-line"></div></div>
+
+<!-- CH12 -->
+<div class="ch" id="ch12">
+  <div class="ch-head" onclick="toggle('ch12')">
+    <div class="ch-num">CHAPTER 12</div>
+    <div class="ch-meta">
+      <div class="ch-title">找出便宜標的</div>
+      <div class="ch-sub">在大多數人不願做的事情中，常常可以找到最好的機會</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯引用投資界前輩席德．柯特的名言：「<strong>投資是相對選擇（relative selection）的修煉。</strong>」三十五年來這句話一直在他心中。這意味著兩件事：投資過程需要嚴格紀律，而且必須有所比較——永遠從現有選項中找出最具潛力報酬對風險比的標的。</div>
+      <div class="story-text">便宜標的如何形成？通常有以下特徵：<strong>客觀上存在缺陷</strong>（財務負擔過重、業績落後同業、結構性保護不足）；<strong>市場情緒扭曲</strong>（沒有足夠分析師覆蓋、被媒體批評）；或是<strong>投資人有非理性的限制</strong>（不能持有某類型資產）。</div>
+      <div class="story-block">
+        一個歷史案例：1990年代後期，債券被視為拖累績效的東西。<br>
+        某法人機構把債股比從20/80調整為100/0（全部股票）。<br>
+        這種極端的厭惡，正好創造了債券的絕佳買入機會。<br>
+        「最被嫌棄的資產，往往是最便宜的資產。」
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「我們的目標不是找出好資產，而是找出好的買進標的。你買什麼並不重要，你付多少錢才重要。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>好資產 ≠ 好投資</strong>——一個高品質資產可能是壞投資，一個有缺陷的資產可能是好投資，關鍵是價格。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>便宜標的通常令人不安</strong>——被忽視、不受歡迎、令人不舒服的資產，才更可能被低估。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>先設定投資範圍，再選最便宜的</strong>——在可接受的風險範圍內，永遠選潛在報酬對風險比最高的標的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>人氣競賽反向思考</strong>——泡沫資產受人追捧，便宜標的被人嫌棄。要找便宜，先找沒人要的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>機構限制創造機會</strong>——法人投資人常常受到客戶授權的限制，他們被迫放棄的資產，就是靈活投資人的機會。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">「投資是相對選擇的修煉」——不是找最好的資產，而是找最便宜的買進機會。好機會往往藏在被嫌棄、被忽視的角落。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH13 -->
+<div class="ch" id="ch13">
+  <div class="ch-head" onclick="toggle('ch13')">
+    <div class="ch-num">CHAPTER 13</div>
+    <div class="ch-meta">
+      <div class="ch-title">耐心等待時機</div>
+      <div class="ch-sub">讓投資標的找上你，而不是你去追它</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">橡樹資本有一條名言：「<strong>我們不尋找投資標的，而是投資標的找上我們。</strong>」邏輯很簡單：如果你打電話給某個有資產的人說「我想買你的X」，X的價格就上漲；如果對方打來說「我被套牢了想出脫」，X的價格就下跌。主動追逐，讓你付出更高的代價。</div>
+      <div class="story-text">馬克斯用棒球傳奇泰德．威廉斯說明耐心的力量：他將好球區分成77個方格，只有打擊落在「甜蜜點」才有高打擊率。而投資與棒球不同的地方是：<strong>投資人不會被三振出局</strong>——你可以等待最好的球，讓所有「不夠好的機會」飄過，不受任何懲罰。</div>
+      <div class="story-block">
+        日本文化「無常」哲學的投資啟發：<br>
+        接受必然出現的起伏改變。過去已經過去，無法恢復。<br>
+        我們能做的只有理解當前的處境，並在這特定條件下做出最好的決定。<br>
+        「消極等待」有時候是最有力的行動。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「投資是世界上最棒的事業，因為你可以不必揮棒。你只要整天等待你喜歡的好球，然後當外野手想睡覺的時候，往前一踏，把球擊出去。」</div>
+        <div class="quote-from">—— 華倫．巴菲特，引自泰德．威廉斯棒球哲學</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>等待優於追逐</strong>——讓賣家主動找上門，而不是你去追，這是獲得更好買入價格的關鍵。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>投資人不會被三振</strong>——你可以讓無數機會飄過，只等待真正的「甜蜜點」。這是投資比棒球更有利的地方。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>消極有時是最佳策略</strong>——不是總有鐘擺達到極端的好機會，市場均衡時，耐心等待比強行投資更好。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>先確認市場條件，再採取行動</strong>——不管環境如何都採用相同行動，是不明智的做法。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「追求高報酬」的危險</strong>——當安全投資報酬下降，投資人轉向高風險資產追求舊有報酬，這種行為重複出現，總以虧損告終。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">耐心本身就是一種投資技能。最好的買入機會從不需要你去追——它們會在別人恐慌拋售時，主動找上有準備的人。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH14 -->
+<div class="ch" id="ch14">
+  <div class="ch-head" onclick="toggle('ch14')">
+    <div class="ch-num">CHAPTER 14</div>
+    <div class="ch-meta">
+      <div class="ch-title">認清預測的局限</div>
+      <div class="ch-sub">沒有人能長期準確預測宏觀經濟；承認這點才是智慧</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯用數據說話：《華爾街日報》半年一次的經濟調查顯示，九十天國庫券利率、三十年債券利率、日圓匯率的預測值與實際相差<strong>平均15%</strong>；長期債券利率六個月預測值平均誤差<strong>96個基點</strong>，足以讓千美元債券產生120美元的誤差。更重要的是，歷史上最有價值的幾次重大轉折，<strong>幾乎從未被預測到</strong>。</div>
+      <div class="story-text">他的結論：大多數預測都是外推法——在開車時緊盯著後照鏡，告訴你事情在哪裡發生，而不是事情將往哪個方向去。偶爾有人在某次預測中大放異彩，但縱觀他們的完整記錄，會發現<strong>持續準確的預言家根本不存在</strong>。</div>
+      <div class="story-block">
+        預測的兩難：<br>
+        當未來與過去相似時（多數時間），預測相對容易，但沒有太大價值，市場已經反映了。<br>
+        當未來與過去截然不同時（關鍵轉折），預測有巨大價值，但偏偏最難準確。<br>
+        結論：「預測的整體價值非常小。」
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「預言家有兩種：一種是無知的人，另一種是不知道自己無知的人。」</div>
+        <div class="quote-from">—— 約翰．肯尼斯．高伯瑞，《金融狂熱簡史》</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「虧錢的人有兩種，一種是什麼都不知道的人，另一種是什麼都知道的人。」</div>
+        <div class="quote-from">—— 亨利．考夫曼，華爾街著名經濟學家</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>數據說話：預測整體價值很小</strong>——連續六十四位專業經濟學家的追蹤顯示，沒有人能持續準確預測。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>最有價值的預測最難準確</strong>——轉折點時的預測最值錢，但也正是預測最不可靠的時候。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>一次正確不代表可靠</strong>——準確預測到2008年危機的人，大多沒能準確預測2009年的反彈。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>有一件事可以「預測」</strong>——你無法知道何時轉折，但可以判斷自己現在處於周期的哪個位置。這是可行且有價值的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>承認無知比過度自信更安全</strong>——知道自己「不知道」，才能建立適當的風險緩衝；過度自信是最危險的態度。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">停止相信自己或他人能長期預測宏觀走勢。把精力放在「知道自己人在哪裡」，而非「預測未來去哪裡」。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH15 -->
+<div class="ch" id="ch15">
+  <div class="ch-head" onclick="toggle('ch15')">
+    <div class="ch-num">CHAPTER 15</div>
+    <div class="ch-meta">
+      <div class="ch-title">察覺所在的景氣位置</div>
+      <div class="ch-sub">不知道要去哪裡，但要清楚知道你人在哪裡</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">面對周期，馬克斯認為有三種應對策略。<strong>第一種：加倍預測</strong>——不可靠，因為上章已說明，無人能長期準確預測轉折。<strong>第二種：忽略周期</strong>——放棄了因位置判斷而帶來的優勢。<strong>第三種：判斷位置</strong>——雖不能知道具體時機，但可以判斷現在處於周期的哪個階段，並據此調整策略。這是馬克斯的選擇。</div>
+      <div class="story-text">「測量市場熱度」的方法：觀察四周投資人的行為，環顧而問：<strong>投資人是樂觀還是悲觀？新的投資計畫被搶著接受還是遭到否決？信貸周期是資金容易取得還是無法獲得？本益比在歷史高點還是低點？</strong>這些都不需要預測，只需要清醒地觀察現狀。</div>
+      <div class="story-block">
+        2007年前的過熱信號（事後清晰可見）：<br>
+        高收益債券發行量破紀錄增加、CCC評級新債大量發行、<br>
+        以債務融資來分紅成為常態、低利率誘使過度槓桿。<br>
+        不需要預測「什麼時候崩盤」，只需認識到「現在很危險」。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「也許我們從不知道要去哪裡，但最好清楚了解我們人在哪裡。就算不能預測周期的時機和起伏，重要的是努力確定我們站在周期的哪個位置，而且根據這個判斷採取行動。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>三種應對周期的方式</strong>：加倍預測（不可靠）、忽略周期（放棄優勢）、判斷位置（最合理）。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>知道位置比預測走向更可行</strong>——「現在市場很熱」是可觀察的，「明天什麼時候崩」是不可知的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>他人行為是最好的溫度計</strong>——當投資人無憂無慮、搶著買進時，你應該謹慎；當他們驚慌失措時，你應該積極。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「推理」是關鍵能力</strong>——不只看到每天發生的事，更要理解這些事件對投資人心態意味著什麼。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「便宜」≠「馬上會漲」</strong>——知道現在很便宜，不代表底部馬上出現，需要耐心等待轉折。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">看清楚四周正在發生什麼——觀察市場的「熱度」，判斷你人在周期的哪裡，這比任何預測模型都更可靠。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH16 -->
+<div class="ch" id="ch16">
+  <div class="ch-head" onclick="toggle('ch16')">
+    <div class="ch-num">CHAPTER 16</div>
+    <div class="ch-meta">
+      <div class="ch-title">認識運氣扮演的角色</div>
+      <div class="ch-sub">短期成功可能只是運氣，不要把運氣當作技巧</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯深度引用塔雷伯《隨機騙局》的思想框架。核心概念是「<strong>另類歷史（Alternative History）</strong>」——每一個成功的投資紀錄，都應該考慮那些<strong>可能發生但沒有發生的其他結果</strong>。如果你承擔了巨大風險而成功，那個成功在很大程度上是運氣，而非技巧。</div>
+      <div class="story-text">塔雷伯的比喻：<strong>透過俄羅斯輪盤賺了一千萬美元，和透過牙醫手術賺了一千萬美元，帳面數字相同，但性質截然不同。</strong>前者靠的是運氣，後者靠的是技巧。兩者不應被同等對待。</div>
+      <div class="story-block">
+        巴菲特的思想實驗：<br>
+        2億2500萬美國人連續猜20天硬幣正反面，最後剩下215人連續猜對20次。<br>
+        他們會寫書、辦講座，書名可能叫《二十天把一元變成百萬》……<br>
+        但那不是技巧，那是隨機的必然——總有人猜對。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「每隔一段時間，總有人會在一個罕見或不確定的結果下注，結果看起來像個天才一樣賭對了。我們應該認清楚，這種情況會發生是因為運氣和勇氣，而不是技巧。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「另類歷史」是評估的關鍵</strong>——成功的投資紀錄必須放入「其他可能結果」的框架中才有意義。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>短期成功無法辨別技巧與運氣</strong>——需要長年、大量的樣本數據，才能統計上區分兩者。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>繁榮時期報酬最高的人≠最好的投資人</strong>——他們往往是承擔最多風險的人，當潮水退去，才知道誰在裸泳。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>決策的好壞 ≠ 結果的好壞</strong>——好決策可能因為不幸的結果顯得錯誤，壞決策也可能因為運氣好而看起來正確。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>謙遜面對自己的成功</strong>——問問自己：「如果當時的宏觀環境不同，我還會成功嗎？」保持謙遜，避免過度自信。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">不要把短期成功當作技巧的證明，也不要把別人的短期成功當作技巧的依據。長期、大量的紀錄，才是真正技巧的唯一證明。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH17 -->
+<div class="ch" id="ch17">
+  <div class="ch-head" onclick="toggle('ch17')">
+    <div class="ch-num">CHAPTER 17</div>
+    <div class="ch-meta">
+      <div class="ch-title">採取防禦型投資策略</div>
+      <div class="ch-sub">投資是「輸家的遊戲」——減少失誤比創造制勝球更重要</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯借用投資理論家查爾斯．艾利斯的比喻，將投資分為兩種遊戲：<strong>贏家的遊戲（Winner's Game）</strong>是職業網球——靠制勝球得分；<strong>輸家的遊戲（Loser's Game）</strong>是業餘網球——靠對手失誤得分。</div>
+      <div class="story-text">他的核心論點：<strong>投資是輸家的遊戲</strong>。因為投資充滿不可控因素（政策改變、天災、管理層失誤、其他投資人的行為），即使你做對每一件事，還是可能失敗。在這樣的環境中，<strong>強調避免犯下大錯，比追求制勝球更有效</strong>。</div>
+      <div class="story-block">
+        橡樹資本的防禦哲學：<br>
+        多頭行情時，我們感覺只要能跟上指數表現就好。<br>
+        空頭行情時，我們設計的投資組合要有超越市場的表現。<br>
+        如果能在多頭跟上、空頭超越，整個周期下來就能以低波動取得高於平均的報酬。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「有資深投資人，也有大膽投資人，但是沒有資深又大膽的投資人。」</div>
+        <div class="quote-from">—— 投資業格言</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>投資是輸家的遊戲</strong>——在充滿不可控因素的環境中，避免大錯比創造奇蹟更可靠。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>攻守兼備的必要性</strong>——投資沒有暫停時間，也不能「換防守陣容」，必須同時應對所有情況。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>防禦型的定義</strong>：多頭跟上市場，空頭少虧損——長期複利效應下，避免大虧比偶爾大贏更有價值。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>確保生存才有複利</strong>——任何一次毀滅性的虧損都會摧毀長期複利的效果，因此不讓投資組合「死掉」是第一優先。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>主動選擇攻守風格</strong>——這個決定應該在有意識、清醒的狀態下做出，而不是隨波逐流或被動接受。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">投資的目標不是擊出最漂亮的制勝球，而是讓自己不輸——空頭少虧，才是長期勝利的根基。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH18 -->
+<div class="ch" id="ch18">
+  <div class="ch-head" onclick="toggle('ch18')">
+    <div class="ch-num">CHAPTER 18</div>
+    <div class="ch-meta">
+      <div class="ch-title">避開投資陷阱</div>
+      <div class="ch-sub">只要能避免犯下大錯，投資人需要做對的事情就可以非常少</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯將投資錯誤分為兩大類：<strong>分析面錯誤</strong>（蒐集資訊不足、計算出錯、忽略步驟）和<strong>心理面錯誤</strong>（貪婪、恐懼、從眾）。心理面的錯誤佔絕大多數，且更難意識到。</div>
+      <div class="story-text">他重點討論「<strong>想像力不足（Failure of Imagination）</strong>」——投資人無法事先理解可能結果的分布範圍。大多數人只預期未來會像過去，但在<strong>轉折點時，未來變得與過去完全不同</strong>，這時外推法就會導致災難性的虧損。</div>
+      <div class="story-block">
+        2008年次貸危機的想像力不足：<br>
+        抵押貸款衍生性商品的設計和評級建立在「房價不可能全國性下跌」的假設上。<br>
+        這個假設在歷史上從未被驗證，卻被當作不可能。<br>
+        當它發生時，整個建立在這假設上的結構全部崩潰。
+      </div>
+      <div class="story-text">另一個常被忽視的陷阱是「<strong>相關性（Correlation）</strong>」——以為分散投資了不同資產，但危機時所有資產會同時崩跌（共同因素）。真正的分散，需要理解不同資產在危機時的相關性，而非平常的相關性。</div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「試著避免虧損，比追求優異的成功投資更為重要。優異的成功投資有時可以達成，但是偶然的失敗可能就會造成嚴重虧損。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>心理面錯誤是主要敵人</strong>——貪婪、恐懼、從眾造成的決策錯誤，遠比計算錯誤更常見、更致命。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>想像力不足的危險</strong>——「以前從沒發生過」不等於「不可能發生」，必須為極端結果留有準備。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「不可能發生」的假設反而讓它發生</strong>——相信不可能，人們才會過度冒險，改變環境，最終讓它發生。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>危機時相關性趨近於1</strong>——平常不相關的資產，在系統性危機時往往同時崩跌，分散風險的效果大打折扣。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>虧損比追求高報酬更值得防範</strong>——巴菲特的第一條投資法則：「不要虧錢。」第二條：「永遠不要忘記第一條。」</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">預期「不可能的事」會發生，為極端情境做好準備，同時保持足夠的謙遜——這才是真正的風險管理，而非事後亡羊補牢。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH19 -->
+<div class="ch" id="ch19">
+  <div class="ch-head" onclick="toggle('ch19')">
+    <div class="ch-num">CHAPTER 19</div>
+    <div class="ch-meta">
+      <div class="ch-title">增加價值</div>
+      <div class="ch-sub">真正的投資技巧，體現在績效的不對稱性上</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯用兩個概念來定義真正的投資技巧：<strong>α值（Alpha）</strong>——排除市場波動下，投資技巧創造的額外報酬；<strong>β值（Beta）</strong>——投資組合相對於市場波動的敏感程度。高β值只是承擔了更多系統性風險，不代表有技巧。</div>
+      <div class="story-text">他的精彩比喻：想像一個投資組合，多頭市場時跟上指數，空頭市場時比指數跌少——這個不對稱的表現才是技巧的體現。<strong>在好市場賺得與市場一樣多，在壞市場賺得比市場多（即虧損較少），長期複利效應極為驚人。</strong></div>
+      <div class="story-block">
+        沒有技巧的主動投資人，可能在周期的某段時間表現亮眼：<br>
+        — 進攻型：多頭時比指數多賺，但空頭時虧損更大<br>
+        — 防守型：空頭時比指數少虧，但多頭時表現落後<br>
+        真正有α值的投資人：在多頭跟上，空頭超越——不對稱的表現。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「能夠增加價值的投資人，績效表現並不對稱。他們在有利環境中增加的價值，比在不利環境中增加的成本更高。這就是我們追求的投資績效不對稱。」</div>
+        <div class="quote-from">—— 霍華．馬克斯</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>α值才是真正的技巧</strong>——高β值可以靠加槓桿達到，只有α值是真正的洞察力和技巧。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>不對稱績效是技巧的標誌</strong>：好時候賺，壞時候比別人少虧——長期複利效果遠超對稱表現。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>被動投資優於無洞察力的主動投資</strong>——沒有獨特洞察力，主動投資只會增加成本，長期不如指數基金。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>風險調整後報酬是唯一合理標準</strong>——同樣的18%報酬，高風險換來的和低風險換來的，完全不同。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>最終回到第二層思考</strong>——增加α值的根本，是擁有比市場共識更深刻、更準確的獨特洞察。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">真正的投資技巧，是在好市場賺到應得的報酬，同時在壞市場保護本金。這種不對稱的表現，才是超越市場的唯一可持續路徑。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH20 -->
+<div class="ch" id="ch20">
+  <div class="ch-head" onclick="toggle('ch20')">
+    <div class="ch-num">CHAPTER 20</div>
+    <div class="ch-meta">
+      <div class="ch-title">合理預期</div>
+      <div class="ch-sub">對報酬的期待必須合理——好到不像真的，就不是真的</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">要達到高報酬，只有五個途徑：在極度看空時買進、擁有特殊技巧、承擔大量風險、高槓桿操作、非常好的運氣。<strong>每一個條件都有問題</strong>：絕佳買入機會不常出現、技巧十分罕見、風險可能對你不利、槓桿放大損益兩面、運氣無法依賴。</div>
+      <div class="story-text"><strong>馬多夫醜聞（Bernard Madoff）</strong>是最典型的反面教材：他聲稱近二十年每年穩定創造10%報酬、幾乎沒有任何虧損月份。問題是：股票平均雖有10%，但伴隨巨大波動；國庫券雖穩定，歷史報酬只有個位數。<strong>怎麼可能同時擁有股票的報酬率和國庫券的穩定性？</strong>客戶從未質疑這個問題。</div>
+      <div class="story-block">
+        馬克斯的兩個防騙問題：<br>
+        1. 「這是否好到不像是真的？」<br>
+        2. 「為什麼是我得到這個好運？」<br>
+        任何無法回答這兩個問題的投資機會，都應該放棄。
+      </div>
+    </div>
+
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「法國哲學家伏爾泰說：完美是優秀的敵人。這特別適合應用在投資界——堅持只買在低點的投資人，可能因此錯過很多機會。」</div>
+        <div class="quote-from">—— 霍華．馬克斯引用</div>
+      </div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>高報酬需要特殊條件</strong>——缺一不可，而且每個條件都稀有或危險，正常市場下不應期待。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>馬多夫教訓：穩定的高報酬不可能存在</strong>——能同時擁有股票報酬和國庫券穩定性的，只有騙局。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>懷疑是最重要的投資技能</strong>——自問「這好到不像真的嗎？」能過濾掉大多數的陷阱。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>「便宜」≠「不再進一步下跌」</strong>——不必追求完美的買入點；分批買進、允許繼續下跌再加碼，是更可行的策略。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>否決市場時機的智慧</strong>——與其猜測低點，不如在價格夠便宜時就買進，越便宜買越多。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">每當遇到「穩定高報酬、無任何風險」的機會，第一個問題應該是：「為什麼這個機會會輪到我？」——懷疑，是最好的防身武器。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH21 -->
+<div class="ch" id="ch21">
+  <div class="ch-head" onclick="toggle('ch21')">
+    <div class="ch-num">CHAPTER 21</div>
+    <div class="ch-meta">
+      <div class="ch-title">把所有重要的事做好</div>
+      <div class="ch-sub">全書21個核心要點的最終總整理</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 核心觀念</div>
+      <div class="story-text">馬克斯用這一章將全書21個核心要點串聯起來，形成一個完整的投資哲學框架。他再次強調：<strong>成功的投資，不是做一件事做到完美，而是把所有重要的事都做好，而且持之以恆。</strong></div>
+    </div>
+
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 21個核心要點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點1</strong>：成功投資最好的基礎是價值——清楚了解你想買的東西值多少。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點2</strong>：你對價值的洞察必須比別人更深——學別人不會的、用不同角度看問題。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點3</strong>：你對價值的看法必須有事實和分析為基礎，且要堅持——這樣你才敢在危機時加碼。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點4</strong>：以低於價值的價格買進是最可靠的獲利途徑——付出高於價值的價格很少能奏效。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點5</strong>：便宜標的存在，因為一般人低估了現實情況——卓越投資人不忘「目標是買得好，而非買好的」。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點6</strong>：低買不只提升獲利，也是限制下跌風險的關鍵。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點7</strong>：短期內，心理面和技術面可以壓過基本面，創造極端定價——是機會也是陷阱。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點8</strong>：周期必然起伏，相信「永遠朝同方向」是最危險的想法，引發泡沫與恐慌。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點9</strong>：鐘擺讓群眾高買低賣——在極端時反向投資才是最終贏家。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點10</strong>：風險趨避有時太少（泡沫），有時太多（崩盤）——理性市場需要適度的風險趨避。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點11</strong>：永遠不要低估心理面的影響力——感受到它，但不要屈服於它，以理性克服感性。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點12</strong>：大多數趨勢最終都會過度延伸——能早點認清的人獲利，太晚參與的人受罰。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點13</strong>：雖不能預測走向，但可以判斷現在人在哪裡——觀察他人行為來推斷市場位置。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點14</strong>：反向投資也不保證每次都對——在非極端時機，市場較平衡，需謹慎行動。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點15</strong>：「超越時代」與「失敗」在轉折前很難區分，需要耐心和毅力長期堅持。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點16</strong>：最重要的風險不是波動性，而是永久虧損的可能——高風險擴大結果分布，包括更高的虧損機率。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點17</strong>：少有投資人深入理解「相關性」——危機時，不同資產往往同時崩跌，分散投資的效果大打折扣。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>要點18-21</strong>：謹慎、懷疑、防禦，但當機會真正出現時，也要有足夠的勇氣果斷行動。</div></li>
+      </ul>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">投資沒有單一秘訣，成功需要同時做好多件事：了解價值、控制情緒、識別周期、管理風險，然後有耐心等待，有勇氣行動。</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .content -->
+
+<footer>
+  基於《投資最重要的事》（The Most Important Thing）by 霍華．馬克斯 · 深度學習筆記<br>
+  城邦商業周刊出版 · ISBN 9789869422642 · 2018年版
+</footer>
+
+<script>
+function toggle(id) {
+  const ch = document.getElementById(id);
+  const body = ch.querySelector('.ch-body');
+  const isOpen = ch.classList.contains('open');
+  ch.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>

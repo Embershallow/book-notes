@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Most Important Thing — Deep Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a7a5a;
+  --green-light: #e8f5ef;
+  --green-mid: #9fccb4;
+  --gold: #b8860b;
+  --gold-light: #fdf6e3;
+  --text: #1c1c1c;
+  --text-sec: #555;
+  --text-mute: #999;
+  --border: #e5e5e5;
+  --bg: #faf9f7;
+  --white: #fff;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; font-size: 15px; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.nav-title { font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: var(--green); }
+.nav-meta { font-size: 11px; color: var(--text-mute); }
+
+/* HERO */
+.hero { background: var(--white); padding: 4rem 2rem 3rem; text-align: center; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 1.2rem; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 0.4rem; }
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-author { font-size: 1rem; color: var(--text-sec); margin-bottom: 0.3rem; }
+.hero-org { font-size: 13px; color: var(--text-mute); margin-bottom: 2rem; }
+.hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-n { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--green); }
+.stat-l { font-size: 11px; color: var(--text-mute); letter-spacing: 0.08em; margin-top: 2px; }
+
+/* PRAISE */
+.praise { max-width: 700px; margin: 2.5rem auto; padding: 0 1.5rem; }
+.praise-card { background: var(--gold-light); border: 1px solid #e8d89a; border-radius: var(--radius); padding: 1.5rem 2rem; }
+.praise-text { font-family: 'Playfair Display', serif; font-size: 15px; color: #5a4a1a; line-height: 1.9; font-style: italic; }
+.praise-from { font-size: 12px; color: #8a7030; margin-top: 0.75rem; font-weight: 600; }
+
+/* CONTENT */
+.content { max-width: 700px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+/* PART DIVIDER */
+.part-div { display: flex; align-items: center; gap: 1rem; margin: 3rem 0 1.5rem; }
+.part-line { flex: 1; height: 1px; background: var(--border); }
+.part-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); background: var(--green); padding: 0.4rem 1rem; border-radius: 20px; white-space: nowrap; }
+
+/* CHAPTER CARD */
+.ch { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; transition: border-color 0.2s; }
+.ch:hover { border-color: var(--green-mid); }
+.ch.open { border-color: var(--green); }
+.ch-head { padding: 1.4rem 1.5rem; cursor: pointer; display: flex; align-items: flex-start; gap: 1.2rem; }
+.ch-num { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-mute); padding-top: 3px; min-width: 3.5rem; }
+.ch-meta { flex: 1; }
+.ch-title { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.ch-sub { font-size: 12px; color: var(--text-mute); margin-top: 4px; }
+.ch-arr { font-size: 18px; color: #ccc; transition: transform 0.25s; padding-top: 1px; }
+.ch.open .ch-arr { transform: rotate(180deg); }
+
+/* CHAPTER BODY */
+.ch-body { display: none; border-top: 1px solid var(--border); }
+.ch-body.open { display: block; }
+
+/* STORY */
+.story { padding: 1.5rem 1.5rem 0; }
+.section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--green-light); }
+.story-text { font-size: 14px; color: var(--text-sec); line-height: 1.9; margin-bottom: 1rem; }
+.story-text strong { color: var(--text); font-weight: 600; }
+.story-block { background: var(--green-light); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; margin: 0.75rem 0 1rem; font-size: 13px; color: #2d5a45; line-height: 1.8; }
+
+/* QUOTES */
+.quotes-wrap { padding: 0 1.5rem; }
+.quote-item { border-top: 1px dashed var(--border); padding: 1rem 0; }
+.quote-item:last-child { border-bottom: 1px dashed var(--border); }
+.quote-en { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--text); line-height: 1.9; font-style: italic; }
+.quote-from { font-size: 11px; color: var(--gold); font-weight: 600; margin-top: 0.4rem; }
+
+/* KEY POINTS */
+.kp-wrap { padding: 0 1.5rem; }
+.kp-list { list-style: none; }
+.kp-item { display: flex; gap: 0.75rem; padding: 0.55rem 0; border-bottom: 1px solid #f0f0f0; }
+.kp-item:last-child { border-bottom: none; }
+.kp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-top: 8px; flex-shrink: 0; }
+.kp-text { font-size: 13px; color: var(--text-sec); line-height: 1.8; }
+.kp-text strong { color: var(--text); font-weight: 600; }
+
+/* CONCEPT DIAGRAM */
+.diagram { padding: 0 1.5rem; }
+.diagram-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; font-size: 13px; }
+.d-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.d-col { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
+.d-col-title { font-size: 11px; font-weight: 700; color: var(--text-mute); letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.d-col-item { font-size: 12px; color: var(--text-sec); padding: 0.2rem 0; }
+.d-flow { display: flex; flex-direction: column; gap: 0.5rem; }
+.d-step { display: flex; align-items: center; gap: 0.6rem; }
+.d-num { width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.d-txt { font-size: 12px; color: var(--text-sec); }
+.d-arr { font-size: 16px; color: var(--green-mid); text-align: center; }
+
+/* TAKEAWAY */
+.takeaway { margin: 1.5rem 1.5rem 1.5rem; background: linear-gradient(135deg, #1a7a5a 0%, #0d5c42 100%); border-radius: 10px; padding: 1.25rem 1.5rem; }
+.takeaway-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
+.takeaway-text { font-family: 'Playfair Display', serif; font-size: 14px; color: white; line-height: 1.9; font-style: italic; }
+
+/* FOOTER */
+footer { text-align: center; padding: 3rem 1.5rem; color: var(--text-mute); font-size: 12px; border-top: 1px solid var(--border); background: var(--white); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">The Most Important Thing — Study Notes</span>
+  <span class="nav-meta">Howard Marks · All 21 Chapters</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Deep Study Notes · All 21 Chapters</div>
+  <div class="hero-title"><em>The Most Important Thing</em></div>
+  <div class="hero-author">Howard Marks</div>
+  <div class="hero-org">Founder, Oaktree Capital Management</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">21</div><div class="stat-l">CHAPTERS</div></div>
+    <div class="stat"><div class="stat-n">261</div><div class="stat-l">PAGES</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">PARTS</div></div>
+    <div class="stat"><div class="stat-n">30+</div><div class="stat-l">YRS WISDOM</div></div>
+  </div>
+</div>
+
+<div class="praise">
+  <div class="praise-card">
+    <div class="praise-text">"When I see memos from Howard Marks in my mail, they're the first thing I open and read. I always learn something, and that goes double for his book."</div>
+    <div class="praise-from">— Warren Buffett, Chairman & CEO, Berkshire Hathaway</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PART I -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART I · Thinking Framework</div><div class="part-line"></div></div>
+
+<!-- CH1 -->
+<div class="ch" id="ch1">
+  <div class="ch-head" onclick="toggle('ch1')">
+    <div class="ch-num">CH 01</div>
+    <div class="ch-meta">
+      <div class="ch-title">Second-Level Thinking</div>
+      <div class="ch-sub">Beat the market: think differently AND more accurately</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks opens with a bold claim: <strong>investing is an art, not a science.</strong> No rule works forever. Once a method becomes widely known, its effectiveness disappears. The goal is not a formula — it is a mindset.</div>
+      <div class="story-text">The book's central concept: <strong>First-Level Thinking vs. Second-Level Thinking.</strong> To beat the market, your view must not only be correct — it must differ from the consensus.</div>
+      <div class="story-block">
+        First-level: "It's a great company. Buy."<br>
+        Second-level: "It's a great company, but everyone thinks so. The stock is overvalued. Sell."<br><br>
+        First-level: "The outlook is bad. Sell."<br>
+        Second-level: "The outlook is terrible, and everyone is panicking. Assets are oversold. Buy."
+      </div>
+      <div class="story-text">Second-level thinking demands far more: <strong>What's the range of possible outcomes? What do I think? What does the market think? How does my view differ? Is the market too optimistic or too pessimistic?</strong> This is rare — which is why sustained outperformance is rare.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Investing is not easy, and anyone who thinks it is is stupid."</div>
+        <div class="quote-from">— Charlie Munger, Vice-Chairman, Berkshire Hathaway</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Doing something that others do well isn't likely to result in superior performance. To achieve superior results, you have to hold non-consensus views — and they have to be right."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>First-level thinking is available to everyone</strong> — which is exactly why it only produces average returns.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Two conditions must both be met</strong>: your view differs from consensus, and your view is more accurate. One without the other is not enough.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Investing is art, not science</strong> — it requires intuition and constant adaptation, not mechanical rules.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Insight is hard to teach</strong> — like height in basketball, some investment edge is innate, though it can be cultivated.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Average returns are easy</strong> — just buy an index fund. Active investing only makes sense if you believe you can genuinely do better.</div></li>
+      </ul>
+    </div>
+    <div class="diagram" style="padding-top:1.5rem;">
+      <div class="section-label">🧠 Concept Diagram</div>
+      <div class="diagram-box">
+        <div class="d-vs">
+          <div class="d-col">
+            <div class="d-col-title">First-Level ❌</div>
+            <div class="d-col-item">"Great company" → Buy</div>
+            <div class="d-col-item">"Bad outlook" → Sell</div>
+            <div class="d-col-item">"Earnings falling" → Sell</div>
+            <div class="d-col-item" style="color:#aaa;font-size:11px;margin-top:6px;">Simple · Universal · Average</div>
+          </div>
+          <div class="d-col" style="border-color:var(--green-mid);">
+            <div class="d-col-title" style="color:var(--green);">Second-Level ✓</div>
+            <div class="d-col-item">"Everyone thinks so → Sell"</div>
+            <div class="d-col-item">"Panic has overshot → Buy"</div>
+            <div class="d-col-item">"Less bad than feared → Buy"</div>
+            <div class="d-col-item" style="color:var(--green);font-size:11px;margin-top:6px;">Deep · Rare · Edge</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Don't ask "Is this a good company?" Ask "Is the market's view of this company too optimistic or too pessimistic?" — Contrarian accuracy is the only source of excess returns.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH2 -->
+<div class="ch" id="ch2">
+  <div class="ch-head" onclick="toggle('ch2')">
+    <div class="ch-num">CH 02</div>
+    <div class="ch-meta">
+      <div class="ch-title">Understanding Efficient Markets</div>
+      <div class="ch-sub">Markets integrate information fast — but aren't always right</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">The 1960s Chicago School produced the <strong>Efficient Market Hypothesis (EMH)</strong>: because so many smart investors analyse the same information simultaneously, asset prices always reflect fair value. No one can consistently beat the market. This gave rise to index funds.</div>
+      <div class="story-text">Marks partly agrees: markets <strong>do integrate information rapidly.</strong> But he rejects the idea that the consensus is always correct. His exhibit: Yahoo stock at $237 in January 2000 and $11 in April 2001. <strong>Both prices cannot have been right.</strong></div>
+      <div class="story-block">
+        The fundamental flaw of EMH: it assumes people are rational.<br>
+        But markets are made of people — who have emotions, biases, herding instincts.<br>
+        These human weaknesses create temporary mispricings — which are investment opportunities.
+      </div>
+      <div class="story-text">Marks' conclusion: <strong>mainstream large-cap markets are relatively efficient and hard to beat. But in obscure, neglected corners — high-yield bonds, distressed assets — inefficiency is more common.</strong> That's where Oaktree focuses.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"In an efficient market, sharing consensus views earns you only average returns. To beat the market, you must hold non-consensus views — and be right."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Efficient ≠ Always Correct</strong> — Marks agrees markets integrate information fast, but not that the resulting consensus is always right.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The case for index funds</strong> — if even professional active managers can't consistently beat the market, why pay them management fees?</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The only path to outperformance</strong> — either information others don't have, or superior interpretation of the same information.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Less coverage = more inefficiency</strong> — blue chips are scrutinised by thousands of analysts. Neglected markets offer more opportunity for mispricings.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>High risk ≠ high return</strong> — if risky assets reliably produced high returns, they wouldn't be risky. Risk premium is compensation, not a guarantee.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Markets are fast — not always right. Understanding the limits of market efficiency shows you where genuine opportunities can be found, and where apparent opportunities are just noise.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH3 -->
+<div class="ch" id="ch3">
+  <div class="ch-head" onclick="toggle('ch3')">
+    <div class="ch-num">CH 03</div>
+    <div class="ch-meta">
+      <div class="ch-title">Estimating Intrinsic Value</div>
+      <div class="ch-sub">"Buy low, sell high" requires knowing what low and high mean</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">"Buy low, sell high" — everyone knows the phrase. But <strong>what is low? What is high?</strong> Without a reference point, the advice is meaningless. The only reliable anchor: <strong>Intrinsic Value</strong>. Buy below it. Sell above it.</div>
+      <div class="story-text">Marks completely rejects technical analysis. He cites the random walk hypothesis: <strong>past price movements have zero predictive power over future prices.</strong> Ten consecutive heads in a coin toss don't affect the eleventh. Day traders guessing intraday moves are doing the same thing.</div>
+      <div class="story-block">
+        The core logic of value investing:<br>
+        A company's value = Cash + Tangible assets + Ability to generate cash flow + Growth potential.<br>
+        "Cheap" only means something when the market price is below this estimated intrinsic value.
+      </div>
+      <div class="story-text">He distinguishes <strong>Value Investing</strong> (what is it worth now?) from <strong>Growth Investing</strong> (what might it be worth in the future?). Neither is inherently superior — but both must be anchored in valuation, not momentum or intuition.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Accurate estimates of value are the indispensable foundation for steady, dependable, long-term investment performance."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"The most important discipline is not accounting or economics, but psychology. The key is who likes the investment now — and who will like it later."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Intrinsic value is the anchor</strong> — without it, "cheap" and "expensive" are meaningless. All analysis floats without this foundation.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Technical analysis is unreliable</strong> — past prices cannot predict future prices. Driving by looking only in the rear-view mirror.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Momentum investing's fatal flaw</strong> — Herb Stein's Law: "If something cannot go on forever, it will stop." Trend-chasers always get caught.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Short-term prices are driven by psychology</strong> — fundamentals determine long-run value, but short-term prices can deviate wildly. That gap is both opportunity and risk.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The safest entry point</strong> — buy when no one wants it. When the asset becomes popular, prices have only one way to go: up.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Without an estimate of intrinsic value, there is no such thing as "cheap." Every so-called investment opportunity is just a guess.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH4 -->
+<div class="ch" id="ch4">
+  <div class="ch-head" onclick="toggle('ch4')">
+    <div class="ch-num">CH 04</div>
+    <div class="ch-meta">
+      <div class="ch-title">The Relationship Between Price and Value</div>
+      <div class="ch-sub">Success is not buying good things — it's buying things well</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Even if your valuation is perfectly accurate, the investment isn't complete. You must also <strong>buy at or below intrinsic value.</strong> A great company is not automatically a great investment. The price you pay is everything.</div>
+      <div class="story-text">The classic example: <strong>the Nifty Fifty.</strong> In the early 1970s, markets pushed 50 elite US companies to P/E ratios of 80–90x (vs. the post-war average of 15x). When sentiment cooled, those same companies fell to 8–9x earnings. Investors in the world's best companies lost 90% of their capital — not because the companies failed, but because they paid the wrong price.</div>
+      <div class="story-block">
+        Oaktree's maxim: "Buy well, and you've already made half the sale."<br>
+        Meaning: if the entry price is low enough, questions about when, how, and at what price to sell answer themselves — markets ultimately converge toward intrinsic value.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"There is no asset so good that it can't become a bad investment if bought at too high a price. And there are few assets so bad that they can't be a good investment when bought cheap enough."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Investing is a popularity contest, and the most dangerous thing is to buy something at the peak of its popularity. The safest and potentially most profitable time to buy is when no one likes it."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Great company ≠ great investment</strong> — even the world's best businesses become bad investments when bought at the wrong price.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The Nifty Fifty lesson</strong> — 80–90x P/E on elite companies, then 8–9x years later. 90% capital loss on "the best." Price is what you pay; value is what you get.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Psychology and technicals dominate short-term prices</strong> — forced sellers (margin calls) and forced buyers (fund inflows) create temporary dislocations. Those are the best opportunities.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Buy from forced sellers</strong> — the best trades come from assets sold indiscriminately in panic. Oaktree's best deals came from distressed sellers.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Never become a forced seller</strong> — the worst situation is being compelled to sell at the worst time. This requires long-term capital and psychological strength.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Buying a great company is not the achievement — buying it at the right price is. "Buy well, and you've already made half the sale." Everything begins with the entry price.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART II -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART II · Understanding & Controlling Risk</div><div class="part-line"></div></div>
+
+<!-- CH5 -->
+<div class="ch" id="ch5">
+  <div class="ch-head" onclick="toggle('ch5')">
+    <div class="ch-num">CH 05</div>
+    <div class="ch-meta">
+      <div class="ch-title">Understanding Risk</div>
+      <div class="ch-sub">Risk ≠ volatility — real risk is permanent capital loss</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Academia defines risk as <strong>volatility (beta)</strong> because it's measurable. Marks strongly disagrees. At Oaktree, he has never heard anyone say "I won't buy it because the price might be volatile." What investors actually fear is <strong>permanent loss of capital, or returns too low to justify the risk taken.</strong></div>
+      <div class="story-block">
+        Three reasons risk matters in investing:<br>
+        1. Risk is undesirable — rational people want to minimise it, so higher risk requires higher expected return as compensation.<br>
+        2. Return is only half the story — risk-adjusted return is the only meaningful measure.<br>
+        3. Same return at different risk levels is not the same outcome.
+      </div>
+      <div class="story-text">The most important counter-intuitive point: <strong>higher risk does not guarantee higher return.</strong> Correct statement: high-risk investments must offer higher expected returns to attract capital. But expected return is not realised return. Higher risk means a wider distribution of outcomes — including a greater chance of loss.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Risk means more things can happen than will happen."</div>
+        <div class="quote-from">— Elroy Dimson, London Business School</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"If riskier investments reliably produced higher returns, they wouldn't be riskier. The higher return is required to get investors to accept the additional risk."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Volatility ≠ Risk</strong> — volatility is a measurable proxy, but real risk is the probability of permanent capital loss.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>High risk only guarantees more uncertainty</strong> — outcomes could be much higher or much lower, including total loss.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Return tells only half the story</strong> — a 10% return with enormous risk is far inferior to a 5% risk-free return.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk-adjusted return is the real standard</strong> — every investment must be evaluated alongside the risk taken to achieve it.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk management is the core of investing</strong> — finding rising investments is the easy part. Without correct risk handling, no investment career lasts.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">"High risk brings high returns" is a dangerous myth. High risk only brings uncertain outcomes. The real question: is the return you're receiving worth the risk you're taking?</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH6 -->
+<div class="ch" id="ch6">
+  <div class="ch-head" onclick="toggle('ch6')">
+    <div class="ch-num">CH 06</div>
+    <div class="ch-meta">
+      <div class="ch-title">Recognising Risk</div>
+      <div class="ch-sub">Risk is highest when everyone feels safest</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Most people believe risk is highest in recessions and lowest in booms. Marks says this is exactly backwards. In boom times, investors are optimistic and careless, willing to pay high prices — <strong>that is where real risk accumulates.</strong></div>
+      <div class="story-text">His core logic: <strong>high risk mainly comes from buying at high prices.</strong> When prices are pushed up so far that returns will be inadequate — that is when risk is elevated. "Widespread belief that there's no risk" is itself the rarest and most dangerous form of risk.</div>
+      <div class="story-block">
+        The paradox: when investors stop fearing risk, risk is actually highest.<br>
+        No fear → no risk premium demanded → assets overvalued → future returns compressed → loss risk elevated.<br>
+        The "risk has disappeared" myth is the primary cause of every bubble.
+      </div>
+      <div class="story-text">Marks lists the myths that circulated in 2005–2007: "Globalisation has dispersed risk globally." "Securitisation has eliminated risk." "Computer models have made risk controllable." <strong>Every single one was disproven in 2008.</strong> Risk cannot be eliminated — only transferred or dispersed.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"The market is riskiest when investors feel most comfortable. There's nothing riskier than the widespread belief that there's no risk."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Avalanche expert Jill Fredston notes that safer equipment seduces climbers into taking greater risks — a moral hazard that actually makes them less safe."</div>
+        <div class="quote-from">— Pension &amp; Investments, cited by Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk peaks in booms</strong> — financial imbalances accumulate quietly while people worry least about risk.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Recognising risk starts with observing psychology</strong> — complacency, optimism, and willingness to overpay are the real risk signals.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk is transferred, never eliminated</strong> — every claim that "risk has been eliminated" is the most dangerous illusion preceding every crash.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>High risk comes from overpaying</strong> — risk and expected return are two sides of the same coin when assets are bought at inflated prices.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Moral hazard accelerates crises</strong> — the more protected people feel, the more boldly they act, making the system more fragile overall.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">When everyone says "this time is different — risk has disappeared" — that is the moment of maximum risk. Recognising risk begins with noticing when others have forgotten to be afraid.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH7 -->
+<div class="ch" id="ch7">
+  <div class="ch-head" onclick="toggle('ch7')">
+    <div class="ch-num">CH 07</div>
+    <div class="ch-meta">
+      <div class="ch-title">Controlling Risk</div>
+      <div class="ch-sub">Great investors earn returns AND control risk simultaneously</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Newspaper photos show investors who made fortunes. Rarely does anyone ask how much risk they took. <strong>High returns from high risk deserve no special praise</strong> — unless achieved consistently over years, which would suggest the risk wasn't as high as it appeared.</div>
+      <div class="story-text">Marks uses an analogy to illustrate risk's invisible nature: <strong>germs cause illness, but germs themselves are not illness.</strong> Similarly, risk is the potential for loss when things go wrong — it only manifests as loss when adverse conditions arrive. In a bull market, risk is invisible — but it's still there.</div>
+      <div class="story-block">
+        Buffett's observation: "Only when the tide goes out do you discover who's been swimming naked."<br>
+        In a bull market, risk control is invisible — no one praises you for "taking less risk."<br>
+        But only when the bear market arrives can you see who was truly managing risk.
+      </div>
+      <div class="story-text">Oaktree's definition of excellence: investors who <strong>achieve the same returns with less risk</strong>, or <strong>higher returns with the same risk.</strong> This subtle achievement is nearly impossible to quantify in a bull market — but the long-run compounding effect is enormous.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"The best investors earn returns while bearing risk intelligently. What distinguishes them isn't their returns but how they achieve them."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Even if no loss occurs, risk can still have been present. The absence of loss doesn't mean the portfolio was safe."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk control is invisible in bull markets</strong> — no one praises "less risk taken" during good times. But bear markets reveal everything.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>No loss ≠ no risk</strong> — risk is latent, like bacteria before illness strikes. Its absence from your statements doesn't mean it isn't there.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>True excellence is risk-adjusted</strong> — high returns from high risk are not repeatable. Genuine skill means good returns with controlled risk.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>What Buffett and Lynch share</strong> — their greatness lies not just in high returns, but in decades of consistency without catastrophic losses.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Buy insurance before the fire</strong> — a prudent investor feels protected in a bull market even when protection seems unnecessary. That's the point.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Risk control is invisible in good markets, but decisive in bad ones. True investment skill is not how much you made, but how much risk you took to make it.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART III -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART III · Market Psychology & Cycles</div><div class="part-line"></div></div>
+
+<!-- CH8 -->
+<div class="ch" id="ch8">
+  <div class="ch-head" onclick="toggle('ch8')">
+    <div class="ch-num">CH 08</div>
+    <div class="ch-meta">
+      <div class="ch-title">Cycle Awareness</div>
+      <div class="ch-sub">Cycles always win; forgetting this is where losses are made</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks has two immutable rules about cycles: <strong>Rule One: Most things are cyclical. Rule Two: The greatest opportunities for profit and loss arise when others forget Rule One.</strong></div>
+      <div class="story-text">Why do cycles exist? Because humans are involved. Machines can run in straight lines; economies cannot. When people are optimistic, they spend more, borrow more, pay higher prices. When pessimistic, everything reverses. <strong>Cycle peaks and troughs are created primarily by human emotion</strong>, not objective economic conditions.</div>
+      <div class="story-text">He gives special attention to the <strong>Credit Cycle</strong>: in good times, lending standards fall and capital flows to unworthy borrowers; after losses, banks slam on the brakes. This cycle has repeated throughout history — 1989 real estate, 1998 LTCM, 1999 tech bubble, 2007 credit crisis. The same script, different cast.</div>
+      <div class="story-block">
+        Cycles are self-correcting — no external shock required to reverse them.<br>
+        Success carries the seeds of failure: boom → excessive lending → losses → contraction.<br>
+        Failure carries the seeds of success: contraction → cheap assets → contrarians → recovery.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"The cycle always prevails. Nothing goes in one direction forever. Trees don't grow to the sky."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"If you build it, they will come." In finance, if you make cheap money available, they will borrow and buy — usually indiscriminately, with very negative consequences.</div>
+        <div class="quote-from">— Field of Dreams analogy, cited by Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Cycles are rooted in human nature</strong> — emotion, optimism, and pessimism prevent straight-line progress. What goes up comes down.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The credit cycle is the most powerful</strong> — the tightening and loosening of credit amplifies everything, creating the most extreme opportunities and risks.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Cycles are self-correcting</strong> — no external shock needed. Prosperity itself plants the seeds of the next contraction.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"The worst loans are made in the best of times"</strong> — the moment credit standards are most relaxed is when risk is highest.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Can't predict, but can prepare</strong> — we don't know when the cycle turns, but we can understand where we currently are and prepare for what may come.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">"You can't predict. You can prepare." Understanding the inevitability of cycles — and staying alert when others forget — is the gift cycles offer to thoughtful investors.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH9 -->
+<div class="ch" id="ch9">
+  <div class="ch-head" onclick="toggle('ch9')">
+    <div class="ch-num">CH 09</div>
+    <div class="ch-meta">
+      <div class="ch-title">The Pendulum Effect</div>
+      <div class="ch-sub">Markets swing between greed and fear — rarely stop in the middle</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks uses the pendulum to describe market psychology. The pendulum's average position is the centre — but it almost never rests there. It swings constantly toward the extremes, and the further it swings in one direction, the more powerfully it rebounds. Markets oscillate across multiple dimensions:</div>
+      <div class="story-block">
+        Euphoria ←→ Despair<br>
+        Greed ←→ Fear<br>
+        Optimism ←→ Pessimism<br>
+        Credulity ←→ Scepticism<br>
+        Fear of Missing Out ←→ Fear of Losing Money
+      </div>
+      <div class="story-text">The three stages of a bull market: First, a few clear-eyed investors believe things will improve. Second, most investors recognise improvement is real. Third, <strong>everyone believes things will keep improving forever.</strong> The market peak arrives at the moment the last willing buyer enters — after which the only direction is down.</div>
+      <div class="story-text">2005–2007: fear of missing out dominated; people forgot about losses. 2007–2008: fear of losing dominated; people couldn't buy even at absurdly low prices. <strong>The pendulum swung from one extreme to the other, never pausing in the middle.</strong></div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"The pendulum rarely pauses at the midpoint. It swings to the extremes, and the very act of swinging to one extreme is what provides the energy to swing back."</div>
+        <div class="quote-from">— Howard Marks, 1991</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Being too far ahead of your time is indistinguishable from being wrong."</div>
+        <div class="quote-from">— Howard Marks' favourite investment maxim</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Markets rarely rest at equilibrium</strong> — investor psychology spends most of its time at extremes, not rational midpoints.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Bubble hallmark: absence of risk aversion</strong> — when no one fears risk, risk premiums vanish, assets contain more risk than reward.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Crash hallmark: excessive risk aversion</strong> — when everyone panics, even grossly undervalued assets find no buyers.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The logic of market peaks</strong> — once all buyers have entered, no new demand remains. Peaks occur at the moment of maximum collective conviction.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Two risks that can't both be eliminated</strong> — the risk of loss and the risk of missing out. At each extreme of the pendulum, one dominates entirely.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Markets always swing between greed and fear. Knowing which end of the pendulum you're standing on is already smarter than most investors around you.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH10 -->
+<div class="ch" id="ch10">
+  <div class="ch-head" onclick="toggle('ch10')">
+    <div class="ch-num">CH 10</div>
+    <div class="ch-meta">
+      <div class="ch-title">Fighting Emotional Bias</div>
+      <div class="ch-sub">The biggest investment errors come from psychology, not information</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Many people have enough intelligence to analyse data well. Very few can withstand the powerful forces of psychology. Given the same data, different people often reach similar conclusions — but <strong>their actions diverge completely based on their psychological state.</strong> The largest investment errors don't come from information deficits; they come from mindset.</div>
+      <div class="story-text">Marks catalogues seven destructive psychological forces: <strong>Greed, Fear, Suspension of disbelief, Conformity, Envy, Ego, and Capitulation.</strong> Greed is the most dangerous — it can override common sense, risk aversion, and the memory of past painful losses.</div>
+      <div class="story-block">
+        Galbraith's Law: "Financial memory is extremely short."<br>
+        When similar conditions recur, a new generation of investors treats them as revolutionary innovations.<br>
+        "This time is different" are the four most expensive words in investment history.
+      </div>
+      <div class="story-text">He specifically warns against the "Silver Bullet" illusion: periodically, some strategy or asset produces stunning short-term returns and attracts blind imitation. But <strong>no investment strategy can reliably produce high returns without risk over the long run</strong> — there is no free lunch.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Greed is an extremely powerful force. It's capable of overcoming common sense, risk aversion, prudence, caution, logic, memory of pain, and resolve."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"Nothing is easier than self-deceit. For every man believes what he wishes to be true."</div>
+        <div class="quote-from">— Demosthenes (cited by Charlie Munger)</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Seven dangerous mindsets</strong>: Greed, Fear, Suspended disbelief, Conformity, Envy, Ego, Capitulation — each can make a smart person act foolishly.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Fear is as dangerous as greed</strong> — fear causes selling at low prices, missing the best entry opportunities, retreating when aggression is warranted.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Silver bullets are always illusions</strong> — short-term high returns are possible, but long-term wealth from a risk-free method is not.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Profit from others' emotional errors</strong> — mispricings, cognitive errors, and others' mistakes are the only sustainable source of excess returns.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Short financial memory drives cycles</strong> — inability to remember history allows the same bubbles to recur, just in different packaging.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Understanding your own psychological weaknesses matters more than understanding financial statements. Those who stay cautious when greedy and aggressive when fearful are inherently ahead of the market.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH11 -->
+<div class="ch" id="ch11">
+  <div class="ch-head" onclick="toggle('ch11')">
+    <div class="ch-num">CH 11</div>
+    <div class="ch-meta">
+      <div class="ch-title">Contrarian Investing</div>
+      <div class="ch-sub">Buying when others fear requires most courage, offers most reward</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Most investors are trend-followers — buying in upswings, selling in downswings. This is entirely natural, but it is also the most reliable way to buy high and sell low. <strong>When markets reach extreme highs, the majority are wrong — because they were the ones who pushed it there.</strong></div>
+      <div class="story-text">Yale endowment legend David Swensen captured the cost of contrarianism: "Successful investing requires holding positions that differ from the consensus in uncomfortable ways. Building and maintaining an unconventional portfolio requires accepting positions that look imprudent by conventional standards."</div>
+      <div class="story-block">
+        Contrarian investing is difficult beyond just psychology:<br>
+        — You don't know how far the pendulum will swing, or exactly when it will reverse<br>
+        — "Overpriced" is not the same as "will fall tomorrow" — it can persist for years<br>
+        — Losses can arrive before vindication<br>
+        — You need clients who understand and tolerate your approach
+      </div>
+      <div class="story-text">Marks' warning: <strong>simply doing the opposite of the crowd is not enough</strong> — you must also know why the crowd is wrong. Contrarianism without analysis is just gambling.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Buy when others are despondently selling and sell when others are euphorically buying. This requires the greatest courage but offers the greatest profit."</div>
+        <div class="quote-from">— Sir John Templeton</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"The less prudence with which others conduct their affairs, the greater the prudence with which we should conduct our own affairs."</div>
+        <div class="quote-from">— Warren Buffett</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>At market peaks, the majority is wrong</strong> — they collectively pushed it there. Once all buyers are in, only selling pressure remains.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Contrarianism is psychologically brutal</strong> — you must remain calm while everyone panics, and cautious while everyone celebrates.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Once in a generation" extremes appear every decade</strong> — 2000 tech bubble, 2008 financial crisis — each a defining opportunity for genuine contrarians.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Requires understanding clients</strong> — without investors who tolerate your approach, a contrarian strategy cannot be sustained until vindication.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Contrarian ≠ automatically right</strong> — overvaluation can persist for years. "Being too early" is indistinguishable from "being wrong" until it isn't.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Contrarian investing is not about opposing everything — it's about acting against the crowd at moments of extreme mispricing, backed by analysis and courage. The hardest thing; the most rewarding thing.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PART IV -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">PART IV · Investment Practice</div><div class="part-line"></div></div>
+
+<!-- CH12 -->
+<div class="ch" id="ch12">
+  <div class="ch-head" onclick="toggle('ch12')">
+    <div class="ch-num">CH 12</div>
+    <div class="ch-meta">
+      <div class="ch-title">Finding Bargains</div>
+      <div class="ch-sub">The best opportunities are found where most people won't look</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks cites investment elder Sid Cottle: <strong>"Investing is the discipline of relative selection."</strong> This contains two critical truths: the process must be disciplined, and decisions must be comparative. From whatever is available, you always seek the best potential return-to-risk ratio — regardless of where market levels sit.</div>
+      <div class="story-text">The goal is never to find good assets — it is to find good buys. <strong>A high-quality asset can be a bad buy; a low-quality asset can be a good buy. The mistake of treating objective quality as an investment opportunity is what gets most investors into trouble.</strong></div>
+      <div class="story-block">
+        How bargains form — the opposite of how bubbles form:<br>
+        Bubbles: good asset → everyone agrees → price rises → more buying → bubble.<br>
+        Bargains: flawed or unpopular asset → ignored → price falls → contrarians interested → value emerges.<br>
+        "The best opportunities are found in what most people won't touch."
+      </div>
+      <div class="story-text">He illustrates with bonds in the 1990s: one institution moved from 20% bonds / 80% stocks to 100% stocks. The near-universal contempt for bonds — "it just drags returns down" — was precisely the kind of extreme that creates bargains for the attentive investor.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Our goal is not to find good assets, but to find good buys. It doesn't matter what you buy — it matters what you pay."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Good asset ≠ good investment</strong> — quality matters, but price determines whether it's a buy. They are separate questions.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Bargains are usually uncomfortable</strong> — what's ignored, disliked, or avoided by others is far more likely to be underpriced.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>First set investment universe, then find the cheapest</strong> — within acceptable risk parameters, always choose the highest potential return-to-risk ratio.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Popularity contests in reverse</strong> — bubbles form from universal enthusiasm; bargains form from universal contempt.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Institutional constraints create opportunity</strong> — forced to avoid certain asset classes, institutions leave opportunities for flexible investors.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">"Investing is the discipline of relative selection" — not finding the best asset, but the best buy. The best opportunities hide in what everyone else is refusing to touch.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH13 -->
+<div class="ch" id="ch13">
+  <div class="ch-head" onclick="toggle('ch13')">
+    <div class="ch-num">CH 13</div>
+    <div class="ch-meta">
+      <div class="ch-title">Patience</div>
+      <div class="ch-sub">Let opportunities come to you — don't chase them</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Oaktree's operating principle: <strong>"We don't go looking for investments — we let investments come to us."</strong> The logic is simple: if you call a seller and say "I want to buy your X," the price rises. If a seller calls you saying "I'm trapped in X and need to exit," the price falls. Chasing costs you; patience pays you.</div>
+      <div class="story-text">The baseball analogy from Buffett via Ted Williams: Williams mapped his strike zone into 77 cells and knew his average in each. He only swung at pitches in his "sweet spot." The crucial difference from investing: <strong>in baseball, three strikes and you're out. In investing, you never strike out for not swinging.</strong> You can let any number of "not good enough" pitches pass by.</div>
+      <div class="story-block">
+        The Japanese concept of "mujo" (impermanence) as investment philosophy:<br>
+        Accept that cycles rise and fall, things come and go, conditions change beyond our control.<br>
+        Understand where you are, accept it, adapt — and act accordingly.<br>
+        "Passive waiting" can be the most powerful action.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Investing is the greatest business in the world because you never have to swing. You stand at the plate, the pitcher throws General Motors at 47, US Steel at 39 — and nobody calls a strike on you. You wait for your pitch, and when the outfielder is dozing, you step up and hit it."</div>
+        <div class="quote-from">— Warren Buffett, citing Ted Williams</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Waiting beats chasing</strong> — letting sellers come to you puts you in the stronger negotiating position every time.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>You're never forced to swing</strong> — countless "not quite right" opportunities can pass by without penalty. This advantage over baseball is profound.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Inaction can be the best action</strong> — not every market condition offers genuine opportunity. In balanced markets, patience beats forced activity.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Confirm conditions before acting</strong> — investing without assessing current market conditions is irrational. All other approaches are less defensible.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Reaching for yield" is dangerous</strong> — when safe investments offer low returns, investors chase risky alternatives. This pattern always ends the same way.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Patience itself is an investment skill. The best entry points never need to be chased — they arrive at you when others panic. Waiting for your pitch is not laziness; it is discipline.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH14 -->
+<div class="ch" id="ch14">
+  <div class="ch-head" onclick="toggle('ch14')">
+    <div class="ch-num">CH 14</div>
+    <div class="ch-meta">
+      <div class="ch-title">Limits of Forecasting</div>
+      <div class="ch-sub">Nobody can consistently predict macro trends</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks used Wall Street Journal semi-annual economic surveys to test forecasting accuracy. Findings: predictions for 90-day T-bill rates, 30-year bond yields, and dollar/yen exchange rates were off by an average of <strong>15%</strong>. Long bond yield six-month forecasts missed by an average of <strong>96 basis points</strong> — enough to create a $120 error on a $1,000 bond. More importantly, <strong>the most valuable predictions — calling major turning points — were almost never made.</strong></div>
+      <div class="story-text">The fundamental dilemma: most of the time, the future resembles the past, so forecasters appear accurate by extrapolation. But those extrapolations have no real value — markets already price in expected continuations. Forecasts only have value at turning points. And turning points are exactly when forecasting is hardest.</div>
+      <div class="story-block">
+        The paradox of forecasting value:<br>
+        When future ≈ past (most of the time) → forecasting easy, but valueless (already priced in)<br>
+        When future ≠ past (turning points) → forecasting has maximum value, but is most difficult<br>
+        Overall conclusion: the value of forecasting is very small.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"There are two kinds of forecasters: those who don't know, and those who don't know they don't know."</div>
+        <div class="quote-from">— John Kenneth Galbraith</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-en">"There are two kinds of people who lose money: those who know nothing and those who know everything."</div>
+        <div class="quote-from">— Henry Kaufman</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Data confirms: forecasting is nearly worthless</strong> — systematic tracking of expert economists shows accuracy no better than chance.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Most valuable forecasts are least achievable</strong> — turning point predictions would be worth most; they are also most consistently missed.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>One correct call ≠ reliable skill</strong> — those who called 2008 correctly mostly failed to call the 2009 recovery. No one bats consistently.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>One thing can be "predicted"</strong> — you can't know when the turn comes, but you can judge where you currently sit in the cycle.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Admitting uncertainty is safer than false confidence</strong> — knowing you "don't know" allows you to build appropriate buffers; overconfidence destroys them.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Stop believing you — or anyone — can reliably predict macroeconomic direction. Channel that energy into knowing where you currently are in the cycle. That's achievable. That's actionable.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH15 -->
+<div class="ch" id="ch15">
+  <div class="ch-head" onclick="toggle('ch15')">
+    <div class="ch-num">CH 15</div>
+    <div class="ch-meta">
+      <div class="ch-title">Reading Your Position in the Cycle</div>
+      <div class="ch-sub">Can't know where we're going — but must know where we are</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Three possible responses to cycles: 1) <strong>Double down on prediction</strong> — try harder. Marks rejects this: no one has shown sustained ability to predict cycles. 2) <strong>Ignore cycles entirely</strong> — just buy quality and hold. This surrenders the advantage of positioning. 3) <strong>Judge where you are</strong> — while exact timing is unknowable, the current position in the cycle can be assessed and acted on. This is Marks' approach.</div>
+      <div class="story-text">"Taking the market's temperature" — the essential habit. Not prediction, but clear-eyed observation: <strong>Are investors optimistic or pessimistic? Are financial headlines euphoric? Are new offerings eagerly absorbed or rejected? Is credit available or tight? Are P/E ratios at historic highs or lows?</strong> None of this requires forecasting — only honest observation.</div>
+      <div class="story-block">
+        Warning signs in 2007 (visible to the attentive):<br>
+        — Record high-yield bond issuance including CCC-rated names<br>
+        — Dividends routinely funded by new debt issuance<br>
+        — Covenant-lite loans with minimal creditor protections<br>
+        — Widespread assumption that house prices couldn't fall nationally<br>
+        None of this required predicting "when" — just recognising "dangerous."
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"We may never know where we're going, but we'd better have a good idea of where we are."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Three approaches to cycles</strong>: predict harder (unreliable), ignore entirely (suboptimal), judge current position (most rational).</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Position is knowable; direction is not</strong> — "the market is running hot" is observable. "The market will peak next Tuesday" is not.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Others' behaviour is the best thermometer</strong> — when investors are carefree and aggressive, be careful. When they panic, be aggressive.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Reasoning is the critical skill</strong> — not just seeing what's happening, but inferring what it means for market psychology and appropriate response.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Cheap" ≠ "about to rise"</strong> — knowing the market is cheap doesn't mean the bottom is now. Patience between recognition and vindication is required.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Look clearly at what's happening around you. Observe the market's "temperature" — read the current position in the cycle — and that alone is more reliable than any prediction model ever made.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH16 -->
+<div class="ch" id="ch16">
+  <div class="ch-head" onclick="toggle('ch16')">
+    <div class="ch-num">CH 16</div>
+    <div class="ch-meta">
+      <div class="ch-title">The Role of Luck</div>
+      <div class="ch-sub">Short-term success may be luck — don't mistake it for skill</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks draws heavily on Nassim Taleb's <em>Fooled by Randomness</em>. The core concept: <strong>Alternative History.</strong> Every successful investment record should be evaluated against all the other outcomes that could easily have occurred. If you took enormous risk and succeeded, that success is largely luck — not skill.</div>
+      <div class="story-text">Taleb's comparison: <strong>earning $10 million through Russian roulette vs. earning $10 million through careful dentistry. The amounts are identical. The nature is entirely different.</strong> The former is random; the latter is repeatable. Investors must learn to distinguish the two.</div>
+      <div class="story-block">
+        Buffett's thought experiment:<br>
+        225 million Americans flip coins daily for 20 days. The ~215 who call correctly every single time will write books titled "How I Turned $1 into $1 Million in 20 Days."<br>
+        They'll give lectures. People will seek their advice.<br>
+        But it's not skill — it's the mathematical inevitability that someone will flip 20 heads in a row.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Every once in a while, someone makes a daring bet on an unlikely outcome that succeeds and is hailed as a genius. We should recognise that this success is attributable to boldness and luck — not to skill."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Alternative history" is the key lens</strong> — evaluate every investment record against what else could plausibly have happened.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Short-term success cannot distinguish luck from skill</strong> — years of data across varied conditions are needed to separate the two.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Bull market winners ≠ best investors</strong> — those who made the most in a boom often simply took the most risk. Talent shows when the tide goes out.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Good decisions can produce bad results; bad decisions can produce good results</strong> — results alone are not evidence of decision quality.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Stay humble about your own wins</strong> — asking "would I have succeeded in a different environment?" prevents dangerous overconfidence.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Don't mistake short-term success for skill. Long years of data across all market conditions are the only true measure. Stay humble; keep learning.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH17 -->
+<div class="ch" id="ch17">
+  <div class="ch-head" onclick="toggle('ch17')">
+    <div class="ch-num">CH 17</div>
+    <div class="ch-meta">
+      <div class="ch-title">Defensive Investing</div>
+      <div class="ch-sub">Investing is a loser's game — avoid mistakes more than you chase winners</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks draws on Charles Ellis's classic essay "The Loser's Game," which itself draws on Simon Ramo's tennis analysis. Professional tennis is a "winner's game" — the player who hits more outright winners wins. Amateur tennis is a "loser's game" — the player who makes fewer errors wins. <strong>Points are not won in amateur tennis; they are lost.</strong></div>
+      <div class="story-text">His application to investing: markets are full of uncontrollable factors. Even if you do everything right, policy changes, management missteps, or unexpected events can derail you. <strong>In this environment, emphasising the avoidance of big mistakes beats trying to hit outright winners.</strong></div>
+      <div class="story-block">
+        Oaktree's defensive philosophy in practice:<br>
+        In rising markets: aim to keep pace with the index (acceptable to trail slightly at the best times).<br>
+        In falling markets: design portfolios to outperform significantly (lose less).<br>
+        Result: over full cycles, below-average volatility with above-average returns.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"There are old investors and bold investors, but no old bold investors."</div>
+        <div class="quote-from">— Investment industry proverb</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Investing is a loser's game</strong> — in an environment full of uncontrollables, avoiding big errors beats hitting winners.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>No timeout to switch from offence to defence</strong> — unlike American football, you can't swap in a defensive squad. You must be ready for all conditions simultaneously.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Defensive definition</strong>: keep up in good markets, lose less in bad markets. Long-run compounding from this asymmetry is enormous.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Survival enables compounding</strong> — one catastrophic loss destroys the compounding engine. "Not dying" is the precondition for everything else.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Choose your style consciously</strong> — the offensive/defensive decision should be made explicitly, not drifted into by default.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Investment success is not about hitting the most winners — it's about surviving to compound. Losing less in down markets is the quiet engine behind every great long-run track record.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH18 -->
+<div class="ch" id="ch18">
+  <div class="ch-head" onclick="toggle('ch18')">
+    <div class="ch-num">CH 18</div>
+    <div class="ch-meta">
+      <div class="ch-title">Avoiding Pitfalls</div>
+      <div class="ch-sub">Avoid big mistakes — everything else takes care of itself</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Investment errors fall into two categories: <strong>analytical errors</strong> (bad data, wrong models, missed steps) and <strong>psychological errors</strong> (greed, fear, herding, overconfidence). Psychological errors are far more common and more damaging. Marks focuses here on one particular analytical failure: <strong>Failure of Imagination.</strong></div>
+      <div class="story-text">Failure of imagination means being unable to envision the full range of possible outcomes — particularly the tails. Most investors assume the future will resemble the recent past. That assumption works most of the time. But at critical turning points, when the future dramatically diverges from the past, <strong>extrapolation fails — and that's exactly when the damage is greatest.</strong></div>
+      <div class="story-block">
+        The 2008 mortgage crisis — a textbook failure of imagination:<br>
+        Mortgage derivatives were priced assuming US house prices could not fall nationally.<br>
+        That had never happened in modern statistics — so it was treated as impossible.<br>
+        When it happened, the entire structure built on that assumption collapsed simultaneously.<br>
+        "The assumption it couldn't happen is exactly what made it happen."
+      </div>
+      <div class="story-text">A second overlooked pitfall: <strong>correlation.</strong> Investors think they're diversified holding 15 stocks. But in a systemic crisis, nearly all correlations approach 1 — everything falls together. The hidden common factors that connect seemingly unrelated holdings are the most dangerous risk in any portfolio.</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Avoiding losers is more important than finding winners. Occasional great successes are wonderful, but occasional great failures can be fatal."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Psychological errors dominate</strong> — greed, fear, herding cause far more damage than analytical mistakes.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Failure of imagination is subtle but lethal</strong> — not seeing the full range of outcomes, especially the tails, leads to catastrophic underprepared positions.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Impossible" beliefs create the thing they deny</strong> — when investors believe something can't happen, they take risks that eventually make it happen.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Correlation collapses to 1 in crises</strong> — seeming diversification disappears when a common risk factor strikes. Understand hidden common exposures.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Avoiding losses beats finding wins</strong> — Buffett's rules: "Don't lose money." "Never forget rule one." The asymmetry of loss recovery makes this crucial.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Anticipate what you've been told is impossible. Build in buffers for extreme outcomes. Stay humble about what you don't know — it's the unknown unknowns that cause catastrophic losses.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH19 -->
+<div class="ch" id="ch19">
+  <div class="ch-head" onclick="toggle('ch19')">
+    <div class="ch-num">CH 19</div>
+    <div class="ch-meta">
+      <div class="ch-title">Adding Value</div>
+      <div class="ch-sub">True skill = asymmetric performance: gain more in up, lose less in down</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks introduces two concepts to define genuine investment skill: <strong>Alpha (α)</strong> — returns attributable to skill, independent of market movement; and <strong>Beta (β)</strong> — portfolio sensitivity to the market. High beta simply means taking more systematic risk. That is not skill. <strong>Alpha is.</strong></div>
+      <div class="story-text">The true mark of a value-adding investor is asymmetric performance. In a rising market, a skilled manager participates meaningfully. In a falling market, they fall significantly less. This asymmetry — "more up than down" — <strong>is the definition of alpha, and it compounds dramatically over time.</strong></div>
+      <div class="story-block">
+        Symmetric performance (no skill added):<br>
+        Market up 15% → Portfolio up 15%<br>
+        Market down 15% → Portfolio down 15%<br><br>
+        Asymmetric performance (alpha generated):<br>
+        Market up 15% → Portfolio up 10% (acceptable lag)<br>
+        Market down 15% → Portfolio down 5% (significant outperformance)<br>
+        → Over full cycles, this asymmetry compounds into dramatic outperformance.
+      </div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"Skillful investors show asymmetric performance: they participate in up markets and protect in down markets. Their gains in favourable environments exceed their losses in unfavourable ones."</div>
+        <div class="quote-from">— Howard Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Alpha is genuine skill</strong> — high beta is achievable through leverage. Only alpha proves true investment insight.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Asymmetric performance is the mark of skill</strong>: participating in good markets, protecting in bad markets — the compounding effect over time is transformative.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Passive beats unskilled active</strong> — without genuine edge, active management adds costs without superior outcomes. Index funds win in this scenario.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Risk-adjusted return is the only valid measure</strong> — the same 18% return from high vs. low risk portfolios are not equivalent achievements.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Returns to second-level thinking</strong> — this chapter ultimately loops back to Chapter 1. Alpha comes from consistently superior non-consensus views that prove correct.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">True investment skill means gaining more in good markets than you lose in bad ones. This asymmetry — not raw returns — is what separates the genuinely skilled from the merely lucky.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH20 -->
+<div class="ch" id="ch20">
+  <div class="ch-head" onclick="toggle('ch20')">
+    <div class="ch-num">CH 20</div>
+    <div class="ch-meta">
+      <div class="ch-title">Reasonable Expectations</div>
+      <div class="ch-sub">Expectations must be rational — too much greed invites disaster</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">To achieve high returns, only five paths exist: buying in extreme pessimism, possessing special skill, bearing substantial risk, using high leverage, or getting very lucky. <strong>Every path is either rare or dangerous</strong> — great entry points don't come often; skill is genuinely scarce; risk works against you; leverage amplifies both ways; luck can't be relied upon.</div>
+      <div class="story-text">The Madoff scandal is the defining case study. His victims were not fools — they were wealthy, educated investors. His promise: roughly 10% per year, almost no losing months. The problem: equities average around 10% annually — with enormous volatility. T-bills are stable but yield only low single digits. <strong>How could anyone deliver equity-level returns with T-bill-level stability? Nobody seriously asked.</strong></div>
+      <div class="story-block">
+        Two questions every investor should ask before any commitment:<br>
+        1. "Is this too good to be true?"<br>
+        2. "Why is this opportunity coming to me?"<br><br>
+        If neither can be answered satisfactorily — walk away.
+      </div>
+      <div class="story-text">Marks also addresses the impossibility of picking perfect entry points. "The bottom" is only visible in retrospect. Rather than waiting for the perfect moment, Oaktree's approach: <strong>buy when something is cheap enough; buy more if it gets cheaper; be happy if you put all your capital to work at attractive prices.</strong> Voltaire: "The perfect is the enemy of the good."</div>
+    </div>
+    <div class="quotes-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">💬 Notable Quotes</div>
+      <div class="quote-item">
+        <div class="quote-en">"The perfect is the enemy of the good." — Applied to investing: insisting on the perfect entry keeps you out of many good ones.</div>
+        <div class="quote-from">— Voltaire, cited by Marks</div>
+      </div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>High returns require special conditions</strong> — rare entries, genuine skill, significant risk, or luck. In normal markets, don't expect abnormal results.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>The Madoff lesson</strong>: stable high returns without visible explanation is the definition of a fraud. Educated people missed it by stopping skeptical inquiry.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Scepticism is the most important investment skill</strong> — "Too good to be true?" and "Why me?" filter out most traps before they spring.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>"Cheap" ≠ "won't fall further"</strong> — don't wait for the exact bottom. Buy when cheap, buy more if cheaper, deploy capital at attractive prices.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>Reject market timing</strong> — trying to call tops and bottoms precisely destroys more value than it creates. Relative cheapness, not perfect timing, is the guide.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">Whenever you encounter "stable high returns, no risk," the first question is: "Why is this coming to me?" Unstoppable scepticism is the best — and cheapest — investment protection available.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH21 -->
+<div class="ch" id="ch21">
+  <div class="ch-head" onclick="toggle('ch21')">
+    <div class="ch-num">CH 21</div>
+    <div class="ch-meta">
+      <div class="ch-title">Putting It All Together</div>
+      <div class="ch-sub">All 21 key points — the complete investment philosophy</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="story">
+      <div class="section-label">📖 Core Concept</div>
+      <div class="story-text">Marks closes by assembling all 21 core points into one coherent philosophy. The central thread: <strong>successful investing is not about doing one thing brilliantly. It's about doing all the important things well, consistently, over time.</strong></div>
+    </div>
+    <div class="kp-wrap" style="padding-top:1.5rem;">
+      <div class="section-label">🔑 All 21 Key Points</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>1. Value is the foundation</strong> — know what you want to buy is worth. Understand its components: assets, earnings power, growth potential.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>2. Superior insight is required</strong> — learn what others don't know, see differently, or analyse more accurately. Ideally all three.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>3. Hold your view with conviction</strong> — backed by facts and analysis. Know when to buy and sell. Hold through discomfort.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>4. Price/value relationship is decisive</strong> — buying below intrinsic value is the most reliable path to profit.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>5. Bargains exist because people misjudge</strong> — the goal is always to buy well, not to buy good things.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>6. Buying cheaply is the key risk limiter</strong> — margin of safety is not optional. It is the mechanism that connects value to safety.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>7. Psychology and technicals can override fundamentals short-term</strong> — they create extremes that are both opportunities and dangers.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>8. Economic and market cycles rise and fall</strong> — believing in one-directional permanence is the most dangerous mistake.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>9. The pendulum oscillates</strong> — crowds buy high and sell low. Contrarians who act at extremes are the eventual winners.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>10. Risk aversion oscillates</strong> — too little causes bubbles; too much causes crashes. Rational markets need appropriate risk aversion.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>11. Never underestimate psychological forces</strong> — feel them, but never surrender to them. Reason over emotion.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>12. Trends overshoot</strong> — recognise this early and profit. Join late and be punished.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>13. Know where you are in the cycle</strong> — can't know where it's going, but you can know where it is. Observe others' behaviour as the signal.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>14. Contrarian investing doesn't always work</strong> — not every moment is an extreme. Act carefully in between.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>15. "Too early" and "wrong" look the same before the turn</strong> — patience and staying power are required before vindication arrives.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>16. The most important risk is permanent loss</strong> — not volatility. High risk widens outcome distribution, increasing the chance of catastrophe.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>17. Understand correlation</strong> — it is the overlooked key to portfolio risk. Different assets can share hidden common factors that make them move together in crises.</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>18–21. Defensive posture, scepticism, and prudence</strong> — but when genuine opportunity arrives, act with conviction and courage.</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ One Takeaway</div>
+      <div class="takeaway-text">There is no single secret to investment success. It requires doing many important things well simultaneously — valuation, psychology, risk management, cycle awareness, patience, and courage. The investor who masters all of them wins over the long run.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .content -->
+
+<footer>
+  Based on <em>The Most Important Thing</em> by Howard Marks · Columbia University Press<br>
+  Study Notes · For Educational Reference
+</footer>
+
+<script>
+function toggle(id) {
+  const ch = document.getElementById(id);
+  const body = ch.querySelector('.ch-body');
+  const isOpen = ch.classList.contains('open');
+  ch.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>
