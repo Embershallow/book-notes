@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book Notes — Embershallow</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --sage: #7C8C6E;
@@ -17,9 +17,7 @@
     --muted: #6B6560;
     --border: #DDD5C8;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: var(--warm-white);
     color: var(--charcoal);
@@ -48,6 +46,7 @@
     text-decoration: none;
     letter-spacing: 0.04em;
   }
+  .nav-right { display: flex; align-items: center; gap: 1.2rem; }
   .nav-link {
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
@@ -58,6 +57,22 @@
     transition: color 0.2s;
   }
   .nav-link:hover { color: var(--sage-dark); }
+
+  /* LANG TOGGLE */
+  .lang-toggle { display: flex; border: 1px solid var(--border); overflow: hidden; }
+  .lang-toggle button {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.8rem;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-toggle button.active { background: var(--sage-dark); color: var(--warm-white); }
+  .lang-toggle button:not(.active):hover { background: var(--sage-bg); color: var(--sage-dark); }
 
   /* HERO */
   .hero {
@@ -81,12 +96,8 @@
     color: var(--charcoal);
     line-height: 1.15;
     margin-bottom: 1.2rem;
-    letter-spacing: -0.01em;
   }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--sage-dark);
-  }
+  .hero h1 em { font-style: italic; color: var(--sage-dark); }
   .hero-desc {
     font-size: 1rem;
     color: var(--muted);
@@ -109,7 +120,7 @@
   }
   .hero-cta:hover { background: var(--charcoal); }
 
-  /* FILTER TABS */
+  /* FILTER */
   .filter-bar {
     display: flex;
     justify-content: center;
@@ -155,10 +166,7 @@
     display: flex;
     flex-direction: column;
   }
-  .book-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(74,92,62,0.1);
-  }
+  .book-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(74,92,62,0.1); }
   .book-tag {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -175,24 +183,9 @@
     line-height: 1.3;
     margin-bottom: 0.4rem;
   }
-  .book-author {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-bottom: 1.2rem;
-    font-style: italic;
-  }
-  .book-desc {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-  }
-  .book-links {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
+  .book-author { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.2rem; font-style: italic; }
+  .book-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; flex-grow: 1; }
+  .book-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   .btn-free {
     font-family: 'DM Mono', monospace;
     font-size: 0.68rem;
@@ -205,11 +198,7 @@
     text-decoration: none;
     transition: all 0.2s;
   }
-  .btn-free:hover {
-    background: var(--sage-dark);
-    color: var(--warm-white);
-    border-color: var(--sage-dark);
-  }
+  .btn-free:hover { background: var(--sage-dark); color: var(--warm-white); border-color: var(--sage-dark); }
   .btn-paid {
     font-family: 'DM Mono', monospace;
     font-size: 0.68rem;
@@ -223,29 +212,7 @@
     transition: all 0.2s;
   }
   .btn-paid:hover { background: var(--sage-dark); border-color: var(--sage-dark); }
-
-  .lang-badge {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-    display: flex;
-    gap: 0.3rem;
-  }
-  .lang {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    padding: 0.2rem 0.5rem;
-    background: var(--sage-bg);
-    color: var(--sage-dark);
-    border: 1px solid var(--sage-light);
-    letter-spacing: 0.05em;
-  }
-
-  /* COMING SOON CARD */
-  .book-card.coming {
-    opacity: 0.55;
-    pointer-events: none;
-  }
+  .book-card.coming { opacity: 0.5; pointer-events: none; }
   .coming-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem;
@@ -255,37 +222,10 @@
     margin-top: 1rem;
   }
 
-  /* DIVIDER */
-  .section-label {
-    text-align: center;
-    padding: 2.5rem 2rem 0;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--sage-light);
-  }
-
   /* GUMROAD CTA */
-  .gumroad-cta {
-    background: var(--sage-dark);
-    color: var(--warm-white);
-    text-align: center;
-    padding: 4rem 2rem;
-  }
-  .gumroad-cta h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    margin-bottom: 0.8rem;
-    font-style: italic;
-  }
-  .gumroad-cta p {
-    font-size: 0.9rem;
-    opacity: 0.75;
-    margin-bottom: 1.8rem;
-    font-weight: 300;
-  }
+  .gumroad-cta { background: var(--sage-dark); color: var(--warm-white); text-align: center; padding: 4rem 2rem; }
+  .gumroad-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: 0.8rem; font-style: italic; }
+  .gumroad-cta p { font-size: 0.9rem; opacity: 0.75; margin-bottom: 1.8rem; font-weight: 300; }
   .btn-gumroad {
     display: inline-block;
     background: var(--cream);
@@ -301,111 +241,145 @@
   .btn-gumroad:hover { background: var(--warm-white); }
 
   /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 2rem;
-    border-top: 1px solid var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-  }
+  footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; }
   footer a { color: var(--sage); text-decoration: none; }
 
+  /* LANG VISIBILITY */
+  .en { display: block; }
+  .zh { display: none; }
+  .en-inline { display: inline; }
+  .zh-inline { display: none; }
+
   @media (max-width: 600px) {
-    nav { padding: 1.2rem 1.5rem; }
-    .hero { padding: 3.5rem 1.5rem 2.5rem; }
-    .grid { padding: 2rem 1.5rem 3rem; gap: 1rem; }
+    nav { padding: 1rem 1.2rem; flex-wrap: wrap; gap: 0.6rem; }
+    .nav-right { gap: 0.8rem; }
+    .hero { padding: 3rem 1.5rem 2.5rem; }
+    .grid { padding: 2rem 1.2rem 3rem; gap: 1rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="https://embershallow.com" class="nav-brand">Embershallow</a>
-  <a href="https://embershallow.gumroad.com" class="nav-link" target="_blank">Full Notes →</a>
+  <div class="nav-right">
+    <a href="https://embershallow.gumroad.com" class="nav-link en" target="_blank">Full Notes →</a>
+    <a href="https://embershallow.gumroad.com" class="nav-link zh" target="_blank">完整筆記 →</a>
+    <div class="lang-toggle">
+      <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+      <button id="btn-zh" onclick="setLang('zh')">中</button>
+    </div>
+  </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
-  <div class="hero-label">Free Book Notes</div>
-  <h1>Read Deeply.<br><em>Think Clearly.</em></h1>
-  <p class="hero-desc">Curated summaries of books on investing, habits, and intentional living — free to explore, deeper to own.</p>
-  <a href="https://embershallow.gumroad.com" class="hero-cta" target="_blank">Get Full Notes on Gumroad</a>
+  <div class="hero-label en">Free Book Notes</div>
+  <div class="hero-label zh">免費書摘</div>
+  <h1 class="en">Read Deeply.<br><em>Think Clearly.</em></h1>
+  <h1 class="zh" style="font-family:'Noto Serif TC',serif;">深度閱讀，<br><em>清晰思考。</em></h1>
+  <p class="hero-desc en">Curated summaries of books on investing, habits, and intentional living — free to explore, deeper to own.</p>
+  <p class="hero-desc zh" style="font-family:'Noto Serif TC',serif;">投資、習慣、生活美學的精選書摘，免費閱讀，深度擁有。</p>
+  <a href="https://embershallow.gumroad.com" class="hero-cta en" target="_blank">Get Full Notes on Gumroad</a>
+  <a href="https://embershallow.gumroad.com" class="hero-cta zh" target="_blank">Gumroad 完整筆記</a>
 </div>
 
-<!-- FILTER -->
 <div class="filter-bar">
-  <button class="filter-btn active" onclick="filterBooks('all')">All</button>
-  <button class="filter-btn" onclick="filterBooks('investing')">Investing</button>
-  <button class="filter-btn" onclick="filterBooks('habits')">Habits</button>
-  <button class="filter-btn" onclick="filterBooks('living')">Living</button>
+  <button class="filter-btn active" onclick="filterBooks('all', event)">
+    <span class="en-inline">All</span><span class="zh-inline">全部</span>
+  </button>
+  <button class="filter-btn" onclick="filterBooks('investing', event)">
+    <span class="en-inline">Investing</span><span class="zh-inline">投資</span>
+  </button>
+  <button class="filter-btn" onclick="filterBooks('habits', event)">
+    <span class="en-inline">Habits</span><span class="zh-inline">習慣</span>
+  </button>
+  <button class="filter-btn" onclick="filterBooks('living', event)">
+    <span class="en-inline">Living</span><span class="zh-inline">生活</span>
+  </button>
 </div>
 
-<!-- GRID -->
 <div class="grid" id="book-grid">
 
-  <!-- BOOK 1: The Most Important Thing -->
   <div class="book-card" data-cat="investing">
-    <div class="lang-badge">
-      <span class="lang">EN</span>
-      <span class="lang">中</span>
-    </div>
-    <div class="book-tag">Investing</div>
-    <div class="book-title">The Most Important Thing</div>
+    <div class="book-tag en">Investing</div>
+    <div class="book-tag zh">投資</div>
+    <div class="book-title en">The Most Important Thing</div>
+    <div class="book-title zh" style="font-family:'Noto Serif TC',serif;">投資最重要的事</div>
     <div class="book-author">Howard Marks</div>
-    <div class="book-desc">Second-level thinking, market cycles, and the philosophy behind value investing. A must-read for anyone serious about markets.</div>
+    <div class="book-desc en">Second-level thinking, market cycles, and the philosophy behind value investing. A must-read for anyone serious about markets.</div>
+    <div class="book-desc zh" style="font-family:'Noto Serif TC',serif;">二階思考、市場週期與價值投資哲學，認真對待市場的人必讀之作。</div>
     <div class="book-links">
-      <a href="The most important thing_summary_en.html" class="btn-free">Free Summary (EN)</a>
-      <a href="The most important thing_summary_zh.html" class="btn-free">免費書摘 (中)</a>
-      <a href="https://embershallow.gumroad.com" class="btn-paid" target="_blank">Full Notes ↗</a>
+      <a href="The most important thing_summary_en.html" class="btn-free en">Free Summary (EN)</a>
+      <a href="The most important thing_summary_zh.html" class="btn-free zh">免費書摘（中文）</a>
+      <a href="https://embershallow.gumroad.com" class="btn-paid" target="_blank">
+        <span class="en-inline">Full Notes ↗</span><span class="zh-inline">完整筆記 ↗</span>
+      </a>
     </div>
   </div>
 
-  <!-- COMING SOON PLACEHOLDER -->
   <div class="book-card coming" data-cat="habits">
-    <div class="book-tag">Habits</div>
-    <div class="book-title">Atomic Habits</div>
+    <div class="book-tag en">Habits</div>
+    <div class="book-tag zh">習慣</div>
+    <div class="book-title en">Atomic Habits</div>
+    <div class="book-title zh" style="font-family:'Noto Serif TC',serif;">原子習慣</div>
     <div class="book-author">James Clear</div>
-    <div class="book-desc">Tiny changes, remarkable results. The definitive guide to building good habits and breaking bad ones.</div>
-    <div class="coming-label">Coming Soon</div>
+    <div class="book-desc en">Tiny changes, remarkable results. The definitive guide to building good habits and breaking bad ones.</div>
+    <div class="book-desc zh" style="font-family:'Noto Serif TC',serif;">微小改變，非凡成果。建立好習慣、戒除壞習慣的權威指南。</div>
+    <div class="coming-label en">Coming Soon</div>
+    <div class="coming-label zh">即將推出</div>
   </div>
 
   <div class="book-card coming" data-cat="living">
-    <div class="book-tag">Living</div>
-    <div class="book-title">Essentialism</div>
+    <div class="book-tag en">Living</div>
+    <div class="book-tag zh">生活</div>
+    <div class="book-title en">Essentialism</div>
+    <div class="book-title zh" style="font-family:'Noto Serif TC',serif;">極簡主義</div>
     <div class="book-author">Greg McKeown</div>
-    <div class="book-desc">The disciplined pursuit of less. Do fewer things, but do them better.</div>
-    <div class="coming-label">Coming Soon</div>
+    <div class="book-desc en">The disciplined pursuit of less. Do fewer things, but do them better.</div>
+    <div class="book-desc zh" style="font-family:'Noto Serif TC',serif;">有紀律地追求「更少」。做更少的事，但做得更好。</div>
+    <div class="coming-label en">Coming Soon</div>
+    <div class="coming-label zh">即將推出</div>
   </div>
 
 </div>
 
-<!-- GUMROAD CTA -->
 <div class="gumroad-cta">
-  <h2>Want the full picture?</h2>
-  <p>Complete notes with concept maps, key frameworks, and actionable takeaways.</p>
-  <a href="https://embershallow.gumroad.com" class="btn-gumroad" target="_blank">Browse Full Notes on Gumroad</a>
+  <h2 class="en">Want the full picture?</h2>
+  <h2 class="zh" style="font-family:'Noto Serif TC',serif;">想要完整版？</h2>
+  <p class="en">Complete notes with concept maps, key frameworks, and actionable takeaways.</p>
+  <p class="zh" style="font-family:'Noto Serif TC',serif;">完整筆記包含概念圖、核心框架與可執行重點。</p>
+  <a href="https://embershallow.gumroad.com" class="btn-gumroad en" target="_blank">Browse Full Notes on Gumroad</a>
+  <a href="https://embershallow.gumroad.com" class="btn-gumroad zh" target="_blank">前往 Gumroad 完整筆記</a>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 <a href="https://embershallow.com">Embershallow</a> · Free summaries to read more, think deeper.</p>
+  <p class="en">© 2026 <a href="https://embershallow.com">Embershallow</a> · Free summaries to read more, think deeper.</p>
+  <p class="zh">© 2026 <a href="https://embershallow.com">Embershallow</a> · 免費書摘，閱讀更多，思考更深。</p>
 </footer>
 
 <script>
-function filterBooks(cat) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('.book-card').forEach(card => {
-    if (cat === 'all' || card.dataset.cat === cat) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
-  });
-}
+  function setLang(lang) {
+    const isZh = lang === 'zh';
+    document.querySelectorAll('.en').forEach(el => el.style.display = isZh ? 'none' : 'block');
+    document.querySelectorAll('.zh').forEach(el => el.style.display = isZh ? 'block' : 'none');
+    document.querySelectorAll('.en-inline').forEach(el => el.style.display = isZh ? 'none' : 'inline');
+    document.querySelectorAll('.zh-inline').forEach(el => el.style.display = isZh ? 'inline' : 'none');
+    document.getElementById('btn-en').classList.toggle('active', !isZh);
+    document.getElementById('btn-zh').classList.toggle('active', isZh);
+    localStorage.setItem('lang', lang);
+  }
+
+  function filterBooks(cat, event) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.querySelectorAll('.book-card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+    });
+  }
+
+  // 記住語言偏好
+  const saved = localStorage.getItem('lang');
+  if (saved === 'zh') setLang('zh');
 </script>
 
 </body>
