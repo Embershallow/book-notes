@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原子習慣 — 深度學習筆記</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terra: #8B6355;
+  --terra-light: #C4956A;
+  --terra-dark: #5C3D2E;
+  --terra-bg: #F5EDE6;
+  --cream: #FAF3EC;
+  --warm-white: #FDF8F3;
+  --charcoal: #2C2A28;
+  --muted: #6B5F58;
+  --stone: #8C7B6E;
+  --border: #E8D8CC;
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--warm-white); color: var(--charcoal); line-height: 1.85; font-size: 15px; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav { background: rgba(253,248,243,0.95); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; height: 52px; backdrop-filter: blur(10px); }
+.nav-title { font-family: 'Noto Serif TC', serif; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.04em; color: var(--terra-dark); }
+.nav-cta { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; border: 1px solid var(--border); padding: 0.35rem 0.9rem; border-radius: 20px; }
+
+/* HERO */
+.hero { background: var(--cream); padding: 3.5rem 1.5rem 2.5rem; text-align: center; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); font-weight: 400; margin-bottom: 1.2rem; }
+.hero-title { font-family: 'Noto Serif TC', serif; font-size: 2.6rem; font-weight: 300; color: var(--charcoal); line-height: 1.15; margin-bottom: 0.4rem; }
+.hero-title em { font-style: normal; color: var(--terra-dark); font-weight: 600; }
+.hero-author { font-size: 0.9rem; color: var(--stone); margin-bottom: 0.2rem; }
+.hero-org { font-size: 12px; color: var(--muted); margin-bottom: 2rem; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+.hero-stats { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-n { font-family: 'Noto Serif TC', serif; font-size: 2rem; font-weight: 600; color: var(--terra-dark); line-height: 1; }
+.stat-l { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 3px; }
+
+/* INTRO CARD */
+.intro { max-width: 680px; margin: 2rem auto; padding: 0 1.5rem; }
+.intro-card { background: var(--terra-bg); border: 1px solid #D4A898; border-radius: var(--radius); padding: 1.4rem 1.8rem; }
+.intro-text { font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--terra-dark); line-height: 1.95; font-style: italic; }
+.intro-from { font-size: 11px; color: var(--terra); margin-top: 0.6rem; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+
+/* CONTENT */
+.content { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+/* PART DIVIDER */
+.part-div { display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0 1.2rem; }
+.part-line { flex: 1; height: 1px; background: var(--border); }
+.part-badge { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-white); background: var(--terra-dark); padding: 0.35rem 1rem; border-radius: 20px; white-space: nowrap; }
+
+/* CHAPTER CARD */
+.ch { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.75rem; overflow: hidden; transition: border-color 0.2s; }
+.ch:hover { border-color: #D4A898; }
+.ch.open { border-color: var(--terra); }
+.ch-head { padding: 1.2rem 1.4rem; cursor: pointer; display: flex; align-items: flex-start; gap: 1rem; }
+.ch-num { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding-top: 3px; min-width: 3rem; }
+.ch-meta { flex: 1; }
+.ch-title { font-family: 'Noto Serif TC', serif; font-size: 1.05rem; font-weight: 600; color: var(--charcoal); line-height: 1.35; }
+.ch-sub { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+.ch-arr { font-size: 16px; color: var(--border); transition: transform 0.25s; padding-top: 2px; flex-shrink: 0; }
+.ch.open .ch-arr { transform: rotate(180deg); color: var(--terra); }
+
+/* CHAPTER BODY */
+.ch-body { display: none; border-top: 1px solid var(--border); }
+.ch-body.open { display: block; }
+
+/* SECTIONS */
+.section { padding: 1.4rem 1.4rem 0; }
+.section:last-child { padding-bottom: 1.4rem; }
+.section-label { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--terra-bg); }
+
+/* STORY */
+.story-text { font-size: 13.5px; color: var(--muted); line-height: 1.95; margin-bottom: 0.9rem; }
+.story-text strong { color: var(--charcoal); font-weight: 500; }
+.story-block { background: var(--terra-bg); border-left: 3px solid var(--terra); border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem; margin: 0.75rem 0 1rem; font-size: 13px; color: var(--terra-dark); line-height: 1.85; }
+
+/* QUOTES */
+.quote-item { border-top: 1px dashed var(--border); padding: 0.9rem 0; }
+.quote-item:last-child { border-bottom: 1px dashed var(--border); }
+.quote-zh { font-family: 'Noto Serif TC', serif; font-size: 14px; color: var(--charcoal); line-height: 1.9; font-style: italic; }
+.quote-en { font-size: 11.5px; color: var(--muted); margin-top: 0.3rem; line-height: 1.7; font-style: italic; }
+.quote-from { font-size: 10px; color: var(--terra); font-weight: 500; margin-top: 0.3rem; font-family: 'DM Mono', monospace; letter-spacing: 0.03em; }
+
+/* KEY POINTS */
+.kp-list { list-style: none; }
+.kp-item { display: flex; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid #f5ede6; }
+.kp-item:last-child { border-bottom: none; }
+.kp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--terra); margin-top: 9px; flex-shrink: 0; }
+.kp-text { font-size: 13px; color: var(--muted); line-height: 1.85; }
+.kp-text strong { color: var(--charcoal); font-weight: 500; }
+
+/* CONCEPT MAP */
+.concept-box { background: var(--warm-white); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; margin-bottom: 0.75rem; }
+.concept-title { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra); margin-bottom: 1rem; }
+.concept-flow { display: flex; flex-direction: column; gap: 0.4rem; }
+.concept-node { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 0.55rem 0.9rem; font-size: 13px; color: var(--charcoal); }
+.concept-node.hl { background: var(--terra-dark); color: #fff; border-color: var(--terra-dark); }
+.concept-arrow { font-size: 11px; color: #D4A898; padding-left: 0.4rem; }
+.concept-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.concept-col { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem; }
+.concept-col-title { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem; }
+.concept-col-item { font-size: 12px; color: var(--muted); padding: 0.15rem 0; }
+
+/* TAKEAWAY */
+.takeaway { margin: 0 1.4rem 1.4rem; background: linear-gradient(135deg, var(--terra-dark) 0%, #3d2218 100%); border-radius: 8px; padding: 1.2rem 1.4rem; }
+.takeaway-label { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; }
+.takeaway-text { font-family: 'Noto Serif TC', serif; font-size: 14px; color: #fff; line-height: 1.9; }
+
+/* GUMROAD CTA */
+.gumroad-cta { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; text-align: center; margin: 2.5rem 0; }
+.gumroad-cta p { font-size: 13px; color: var(--muted); margin-bottom: 1rem; line-height: 1.8; }
+.gumroad-btn { display: inline-block; background: var(--terra-dark); color: #fff; padding: 0.7rem 1.8rem; border-radius: 4px; font-size: 13px; letter-spacing: 0.04em; }
+
+/* FOOTER */
+footer { text-align: center; padding: 2.5rem 1.5rem; color: var(--muted); font-size: 11px; border-top: 1px solid var(--border); background: #fff; line-height: 1.8; font-family: 'DM Mono', monospace; letter-spacing: 0.03em; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">原子習慣</span>
+  <a class="nav-cta" href="https://embershallow.gumroad.com" target="_blank">完整筆記 ↗</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">深度學習筆記 · 免費書摘</div>
+  <div class="hero-title"><em>原子習慣</em></div>
+  <div class="hero-author">詹姆斯．克利爾 James Clear</div>
+  <div class="hero-org">Embershallow · 書摘筆記</div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">大定律</div></div>
+    <div class="stat"><div class="stat-n">20</div><div class="stat-l">核心章節</div></div>
+    <div class="stat"><div class="stat-n">320</div><div class="stat-l">原著頁數</div></div>
+    <div class="stat"><div class="stat-n">37×</div><div class="stat-l">每日1%</div></div>
+  </div>
+</div>
+
+<div class="intro">
+  <div class="intro-card">
+    <div class="intro-text">「微小的改變，驚人的成果。你不會提升到目標的水準——你只會落到系統的水準。」</div>
+    <div class="intro-from">—— 詹姆斯．克利爾，《原子習慣》</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- 基本原理 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">基本原理 · 微小改變的驚人力量</div><div class="part-line"></div></div>
+
+<!-- CH1 -->
+<div class="ch" id="ch1">
+  <div class="ch-head" onclick="toggle('ch1')">
+    <div class="ch-num">第 01 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">微習慣的驚人力量</div>
+      <div class="ch-sub">邊際增益．1%法則．複利效應．潛能蓄積期</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">2003年，英國自行車協會聘請戴夫·布雷斯福德，推行一個激進哲學：把騎自行車的每個環節改進 <strong>1%</strong>。他的團隊優化了車座舒適度、輪胎抓地力、騎士睡眠，甚至把隊伍卡車內部漆成白色以便發現灰塵。五年後，英國車手在2008年北京奧運會奪得60%金牌。教訓是：微小改變會複利成非凡結果。</div>
+      <div class="story-text">我們高估決定性時刻的重要性，卻低估每日微小進步的力量。每天進步1%，一年後你會進步 <strong>37倍</strong>。習慣是自我提升的複利——短期內看不見，長遠卻能改變一切。</div>
+      <div class="story-block">
+        潛能蓄積期：<br>
+        就像冰塊從25°F加熱到31°F始終不融化，直到32°F才突然融化——習慣在突破之前默默累積動能。大多數人就在這個「失望谷底」放棄了，而突破往往就在此後不久。
+      </div>
+      <div class="story-text">目標決定方向；<strong>系統決定進步</strong>。贏家和輸家擁有相同的目標——分開他們的是每日系統的品質。你不會提升到目標的水準，你只會落到系統的水準。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「你不會提升到目標的水準——你只會落到系統的水準。」</div>
+        <div class="quote-en">"You do not rise to the level of your goals. You fall to the level of your systems."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「習慣是自我提升的複利。」</div>
+        <div class="quote-en">"Habits are the compound interest of self-improvement."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>1%的改進會複利爆發</strong>——每天進步1%，一年後進步37倍；每天退步1%，接近歸零。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>潛能蓄積期</strong>——突破感覺突然，其實是長期隱形準備的結果，大多數人在此前放棄。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>系統優於目標</strong>——目標設定方向，系統推動進步；修正輸入端，輸出端自然修正。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>軌跡比位置重要</strong>——你現在的成果不如你習慣正帶你去的方向重要。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>時間放大你所餵養的一切</strong>——好習慣讓時間成為盟友；壞習慣讓時間成為敵人。</div></li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-label">🧠 概念圖解</div>
+      <div class="concept-box">
+        <div class="concept-title">複利效應的路徑</div>
+        <div class="concept-flow">
+          <div class="concept-node hl">🎯 一年後進步37倍</div>
+          <div class="concept-arrow">↑ 來自</div>
+          <div class="concept-node">每日持續1%改進</div>
+          <div class="concept-arrow">↑ 需要撐過</div>
+          <div class="concept-node">⚠️ 潛能蓄積期——大多數人在這裡放棄</div>
+        </div>
+      </div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">不要提高目標——改善系統。比分自然會照顧好自己。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH2 -->
+<div class="ch" id="ch2">
+  <div class="ch-head" onclick="toggle('ch2')">
+    <div class="ch-num">第 02 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">習慣如何塑造你的身份</div>
+      <div class="ch-sub">基於身份的習慣．為你想成為的人投票</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">改變發生在三個層次。最外層：<strong>結果</strong>（你得到什麼）。中間層：<strong>過程</strong>（你做什麼）。最深層：<strong>身份</strong>（你相信自己是誰）。大多數人由外而內改變——從結果開始。最有效的方式是由內而外，從身份開始。</div>
+      <div class="story-text">有人遞菸，甲說「我在戒菸」——仍把自己當成吸菸者。乙說「我不抽菸」——已<strong>轉變身份</strong>。你採取的每個行動，都是為你想成為的那種人投票。票數夠多，身份就改變。</div>
+      <div class="story-block">
+        改變身份的兩步驟：<br>
+        1. 決定你想成為哪種人。<br>
+        2. 用小贏來向自己證明。<br><br>
+        不需要全數通過——多數票就足以贏得選舉。
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「你採取的每一個行動，都是為你希望成為的那種人投票。」</div>
+        <div class="quote-en">"Every action you take is a vote for the type of person you wish to become."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「目標不是讀完一本書，而是成為一個讀者。」</div>
+        <div class="quote-en">"The goal is not to read a book, the goal is to become a reader."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>改變的三個層次</strong>——結果、過程、身份。由內而外才能持久。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>每個行動都是一票</strong>——小小的重複行為，建立新身份的證據。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>不需要完美</strong>——多數票就能贏得身份選舉，偶爾犯錯不影響大局。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>身份也可以是陷阱</strong>——僵化的自我標籤（「我不是早起的人」）會阻礙改變。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣強化身份，身份強化習慣</strong>——一個強大的正向反饋迴路。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">每個習慣都是為你想成為的人投的一票。票數夠了，身份就改變。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH3 -->
+<div class="ch" id="ch3">
+  <div class="ch-head" onclick="toggle('ch3')">
+    <div class="ch-num">第 03 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">培養良好習慣的四步法</div>
+      <div class="ch-sub">提示→渴求→回應→獎勵．行為轉變四大定律</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">1898年，心理學家桑代克把貓放進謎題箱。一開始貓胡亂嘗試，偶然按下杠杆逃出後開始學習。重複20至30次後，貓能在幾秒內逃出。<strong>帶來滿意結果的行為傾向於重複。</strong>這是所有習慣科學的基礎。</div>
+      <div class="story-text">每個習慣都遵循同一迴路：<strong>提示→渴求→回應→獎勵。</strong>拿掉任何一個環節，習慣迴路就斷裂。培養好習慣：讓提示顯而易見、渴求有吸引力、回應簡便易行、獎勵令人愉悅。破除壞習慣：逆轉每條定律。</div>
+      <div class="story-block">
+        行為轉變四大定律：<br>
+        第一定律——讓它顯而易見（提示）<br>
+        第二定律——讓它有吸引力（渴求）<br>
+        第三定律——讓它簡便易行（回應）<br>
+        第四定律——讓它令人愉悅（獎勵）
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「每個習慣的目的，都是解決你面臨的問題。」</div>
+        <div class="quote-en">"The purpose of every habit is to solve the problems you face."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣迴路有4個階段</strong>——提示、渴求、回應、獎勵。缺少任何一個，習慣就無法形成。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>你渴求的是狀態改變，不是習慣本身</strong>——渴求的是解脫或愉悅，不是行為本身。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>四大定律反向也有效</strong>——破除壞習慣：讓它不明顯、無吸引力、困難、不令人愉悅。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣解放你的心智</strong>——自動化例行決定，為創造力和更高層次思考釋放心理空間。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">每個習慣都遵循：提示→渴求→回應→獎勵。掌握這個迴路，就掌握了你的行為。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第一定律 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">第一定律 · 讓它顯而易見</div><div class="part-line"></div></div>
+
+<!-- CH4 -->
+<div class="ch" id="ch4">
+  <div class="ch-head" onclick="toggle('ch4')">
+    <div class="ch-num">第 04 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">看著不對勁的那個人</div>
+      <div class="ch-sub">習慣記分卡．意識覺察．無意識習慣的危險</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">一位護士在家庭聚會上瞥了公公一眼，說「你看起來不對勁，要去醫院」。幾小時後，外科醫生發現他有一條大動脈堵塞。她無法解釋自己看到了什麼——多年照顧心臟病患者後，她的大腦已學會<strong>無意識地辨識模式</strong>。習慣在自動駕駛模式下運行——這既是力量，也是危險。</div>
+      <div class="story-text">日本鐵路系統使用「指差確認」——工作人員指向信號燈並大聲說出，把無意識習慣提升到有意識確認層次，錯誤率降低85%。清爾的對應工具：<strong>習慣記分卡</strong>——列出你所有的日常習慣，標記每個為正面（+）、負面（−）或中性（=）。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「除非你讓無意識變得有意識，否則它將主宰你的生活，而你會稱之為命運。」</div>
+        <div class="quote-en">"Until you make the unconscious conscious, it will direct your life and you will call it fate."</div>
+        <div class="quote-from">—— 卡爾．榮格</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣在自動駕駛模式運行</strong>——重複夠多次後，提示在無意識下觸發回應。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣記分卡</strong>——列出習慣並標記+/−/=，建立自我覺察，不帶評判。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>覺察是改變的前提</strong>——所有行為改變，都從決定認真觀察開始。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">你無法改變一個你沒有注意到的習慣。覺察，是改變的第一定律。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH5 -->
+<div class="ch" id="ch5">
+  <div class="ch-head" onclick="toggle('ch5')">
+    <div class="ch-num">第 05 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">培養新習慣的最佳方式</div>
+      <div class="ch-sub">執行意圖．習慣疊加．狄德羅效應</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">2001年英國研究：第三組人寫下確切的運動時間和地點。結果：<strong>91%每週至少運動一次</strong>，其他組只有35%。這個書面計畫叫做執行意圖：「我將在[時間]於[地點]做[行為]。」</div>
+      <div class="story-text">法國哲學家狄德羅收到一筆橫財，買了件猩紅色長袍——然後感到必須升級周圍所有東西來配套。一樣東西引發無盡連鎖。<strong>習慣疊加把這個傾向用在好的方面。</strong></div>
+      <div class="story-block">
+        執行意圖：<br>
+        「我將在【時間】於【地點】做【行為】。」<br><br>
+        習慣疊加：<br>
+        「做完【現有習慣】後，我將做【新習慣】。」
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「許多人以為自己缺乏動力，其實他們真正缺乏的是明確計畫。」</div>
+        <div class="quote-en">"Many people think they lack motivation when what they really lack is clarity."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>執行意圖讓貫徹率翻倍</strong>——明確性是意圖和行動之間的橋樑。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣疊加</strong>——把新習慣連結到現有習慣，現有習慣成為新習慣的提示。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>具體性消除決策疲勞</strong>——時機到來時，無需再做決定，直接執行計畫。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">明確何時、何地。把新習慣疊加在舊習慣上。從行動時刻中移除每一個決定。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH6 -->
+<div class="ch" id="ch6">
+  <div class="ch-head" onclick="toggle('ch6')">
+    <div class="ch-num">第 06 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">原動力被高估，環境往往更重要</div>
+      <div class="ch-sub">視覺提示．一個空間一種用途．成為環境的建築師</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">安妮．桑代克醫生重新設計醫院自助餐廳——把水放在每個食物站旁邊，什麼也沒說。三個月後，<strong>汽水銷量下降11.4%；瓶裝水銷量上升25.8%</strong>。不需要說服，只是改變了什麼是顯而易見的。人們選擇擺在眼前的東西，而不是對他們最好的東西。</div>
+      <div class="story-text">視覺是人類最主導的感官。你看到什麼，塑造你做什麼——遠比意志力更強大。<strong>設計你的環境，讓正確的選擇也是顯而易見的選擇。</strong>「一個空間，一種用途」——沙發用來閱讀，書桌用來工作，床用來睡覺。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「環境是塑造人類行為的無形之手。」</div>
+        <div class="quote-en">"Environment is the invisible hand that shapes human behaviour."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>環境塑造行為的力量超過動力</strong>——改變周圍環境的小改變，能帶來行動的大改變。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>讓好習慣顯而易見</strong>——把提示放在你不可能錯過的地方。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>一個空間，一種用途</strong>——避免混合情境；強烈的聯結創造自動化行為。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">停止依賴動力。設計你的環境，讓正確選擇也是顯而易見的選擇。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH7 -->
+<div class="ch" id="ch7">
+  <div class="ch-head" onclick="toggle('ch7')">
+    <div class="ch-num">第 07 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">自我控制的秘密</div>
+      <div class="ch-sub">移除提示．逃避誘惑勝於抵抗誘惑</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">1971年，超過20%的美軍士兵在越南染上海洛因毒癮。但回國後，<strong>只有5%在一年內復發</strong>。為什麼？環境完全改變。在越南，毒品觸手可及；回國後，所有提示消失了。情境改變，習慣就改變。自制力強的人並不更英勇地抵抗誘惑——他們<strong>更少遇到誘惑</strong>。</div>
+      <div class="story-block">
+        第一定律的逆向：<br>
+        要破除壞習慣 → 讓提示消失不見。<br><br>
+        把手機放到另一個房間<br>
+        把電視搬出臥室<br>
+        刪除社群媒體App<br>
+        拔掉遊戲控制器插頭
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「自我控制只是權宜之計，而非長遠良策。」</div>
+        <div class="quote-en">"Self-control is a short-term strategy, not a long-term one."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>環境勝過意志力</strong>——改變情境改變習慣，比自律更可靠。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣被編碼，不會被抹除</strong>——一旦形成，習慣永遠不會完全消失；要避開它的提示。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>移除提示，移除習慣</strong>——破除壞習慣最實用的方法。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">不要抵抗誘惑——移除它。自我控制的秘密，是讓自己不再需要它。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二定律 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">第二定律 · 讓它有吸引力</div><div class="part-line"></div></div>
+
+<!-- CH8 -->
+<div class="ch" id="ch8">
+  <div class="ch-head" onclick="toggle('ch8')">
+    <div class="ch-num">第 08 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">怎樣使習慣不可抗拒</div>
+      <div class="ch-sub">多巴胺．超常刺激．喜好綁定</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">科學家廷貝亨發現雛鷗會瘋狂啄擊更大的紅點——即使是假的誇大版本。他稱之為<strong>超常刺激</strong>：誇大現實版本，引發異常強烈的反應。垃圾食品、社群媒體、娛樂都是人類的超常刺激——被設計成比大自然任何產物都更具吸引力。</div>
+      <div class="story-text">多巴胺不是在你獲得獎勵時激增，而是在你<strong>期待獎勵時</strong>激增。工程系學生羅南·伯恩改裝他的健身腳踏車，只有在踩踏板達到特定速度時才能播放Netflix。<strong>喜好綁定</strong>：把你需要做的事與你想做的事綁在一起。</div>
+      <div class="story-block">
+        喜好綁定公式：<br>
+        「做完【我需要做的事】後，我可以做【我想做的事】。」<br><br>
+        例如：<br>
+        只在運動時看Netflix<br>
+        只在打掃時聽Podcast
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「驅使我們行動的，是對獎勵的期待——而非獎勵的實現。」</div>
+        <div class="quote-en">"It is the anticipation of a reward — not the fulfilment of it — that gets us to take action."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>多巴胺驅動期待，不是滿足</strong>——大腦渴求的是對獎勵的預期，而非獎勵本身。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>喜好綁定</strong>——把你需要的習慣與你真正喜歡的事配對，讓它更有吸引力。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣越有吸引力，越容易形成</strong>——吸引力是習慣形成的加速劑。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">把你需要做的事與你想做的事配對。讓習慣成為你享受某件事的入場券。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH9 -->
+<div class="ch" id="ch9">
+  <div class="ch-head" onclick="toggle('ch9')">
+    <div class="ch-num">第 09 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">在習慣形成中親友所起的作用</div>
+      <div class="ch-sub">我們模仿三種群體．加入文化讓習慣不可抗拒</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">拉茲洛·波爾加在充滿象棋的家庭環境中養育三個女兒。三人都成為世界級棋手，最小的胡迪特15歲成為特級大師。她們不覺得象棋是負擔——因為在她們的世界裡，<strong>象棋卓越就是正常的。</strong>文化讓習慣變得不可抗拒。</div>
+      <div class="story-text">我們模仿三種群體：<strong>親近的人</strong>（家人、朋友）、<strong>多數人</strong>（社會規範）和<strong>有權勢的人</strong>（高地位者）。有一個肥胖的朋友，你自己肥胖的風險增加57%。<strong>社會環境是塑造習慣最強大的力量之一。</strong></div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「培養好習慣最有效的方法之一，就是加入一種文化，其中你渴望的行為是正常行為。」</div>
+        <div class="quote-en">"One of the most effective things you can do to build better habits is to join a culture where your desired behaviour is the normal behaviour."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>加入習慣已是常態的文化</strong>——當你想要的行為已是群體標準，改變就變得不可抗拒。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>共同身份維持習慣</strong>——「我們」比「我」更持久。社群把個人努力變成集體身份。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>社會傳染是真實的</strong>——你身邊的人塑造你的習慣，程度超乎你的想像。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">加入一個你想要的行為已是正常的群體。文化讓習慣不可抗拒。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH10 -->
+<div class="ch" id="ch10">
+  <div class="ch-head" onclick="toggle('ch10')">
+    <div class="ch-num">第 10 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">如何找到並消除壞習慣的根源</div>
+      <div class="ch-sub">表層渴求 vs. 深層動機．重新框架</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">艾倫·卡爾的《輕鬆戒菸法》不靠意志力，而是<strong>重新框架每一個渴求</strong>：「你以為抽菸可以緩解壓力——實際上不行；它破壞你的神經系統。」一旦習慣看起來不再提供任何真正的好處，渴求就消散了。</div>
+      <div class="story-text">每個習慣都有表層渴求和<strong>深層動機</strong>。你不是渴望Instagram——你渴望社會認同。你不是渴望香菸——你渴望焦慮的解脫。現代習慣是古老需求的今日解決方案。<strong>習慣是可以協商的；底層動機不可以。</strong></div>
+      <div class="story-block">
+        重新框架——從義務到機會：<br>
+        ❌「我必須運動」→ 感覺像負擔<br>
+        ✅「我可以活動身體、增強力量」→ 感覺像特權
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「你的習慣，是解決古老慾望的現代方案。」</div>
+        <div class="quote-en">"Your habits are modern solutions to ancient desires."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>每個渴求都有更深的動機</strong>——習慣是對聯結、地位、安全感等古老需求的現代表達。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>重新框架壞習慣</strong>——移除感知到的好處，渴求就消散了。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>重新框架好習慣</strong>——從義務變為機會；心態轉變改變一切。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">每個壞習慣都在服務一個真實的需求。找到那個需求——再找一個更好的習慣來服務它。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三定律 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">第三定律 · 讓它簡便易行</div><div class="part-line"></div></div>
+
+<!-- CH11 -->
+<div class="ch" id="ch11">
+  <div class="ch-head" onclick="toggle('ch11')">
+    <div class="ch-num">第 11 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">慢步前行，但決不後退</div>
+      <div class="ch-sub">醞釀 vs. 行動．重複次數建立習慣，不是時間長度</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">攝影教授尤爾斯曼把班級分成「數量組」和「質量組」。學期末，<strong>所有優秀作品都來自數量組</strong>。他們在拍攝、嘗試、從錯誤中學習；質量組在爭論理論，從未真正發展技能。<strong>練習勝過計劃，每次都是。</strong></div>
+      <div class="story-text"><strong>醞釀</strong>是計劃和策略——感覺有成效但不產生結果。<strong>行動</strong>才是真正帶來成果的行為。正確的問題不是「需要多久？」而是<strong>「需要重複幾次？」</strong>每次重複都加強神經通路，直到你越過習慣線。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「最有效的學習形式是實踐，而非計劃。」</div>
+        <div class="quote-en">"The most effective form of learning is practice, not planning."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>醞釀 vs. 行動</strong>——計劃感覺有進展但不產生結果；只有行動才有。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>重複次數建立習慣，不是時間長度</strong>——頻率比持續時間更重要；專注於次數，不是天數。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>數量帶來質量</strong>——大量練習勝過理論完美主義，每次都是。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">停止計劃。開始重複。習慣是靠頻率建立的，不是靠意圖。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH12 -->
+<div class="ch" id="ch12">
+  <div class="ch-head" onclick="toggle('ch12')">
+    <div class="ch-num">第 12 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">最省力法則</div>
+      <div class="ch-sub">減少好習慣的阻力．增加壞習慣的阻力</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">賈德·戴蒙觀察到農業向東西方向傳播的速度是南北方向的2至3倍，因為相同緯度意味著相同氣候——阻力更少。教訓：<strong>阻力上的微小差異，在長期產生巨大的結果差異。</strong></div>
+      <div class="story-text">在兩個相似選項中，人類可靠地選擇需要較少能量的那個。這是智能的資源保護，不是懶惰。長期存活的習慣是<strong>最容易執行</strong>的習慣。讓好習慣容易；讓壞習慣困難。</div>
+      <div class="story-block">
+        因減而加的例子：<br>
+        🎸 想練吉他？→ 把它放在客廳中央。<br>
+        🏋️ 想運動？→ 穿著運動服睡覺，包包放門口。<br>
+        🥗 想吃得健康？→ 預先切好蔬菜；把垃圾食品藏起來。
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「減少與好行為相關的阻力。增加與壞行為相關的阻力。」</div>
+        <div class="quote-en">"Reduce the friction associated with good behaviours. Increase the friction associated with bad ones."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>阻力決定行為</strong>——微小的困難增加可以讓壞習慣幾乎消失。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>減少好習慣的阻力</strong>——提前準備環境，讓正確選擇毫不費力。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>增加壞習慣的阻力</strong>——在你和不想要的行為之間添加步驟和障礙。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">讓好習慣容易。讓壞習慣困難。設計你的環境，而不是你的自律。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH13 -->
+<div class="ch" id="ch13">
+  <div class="ch-head" onclick="toggle('ch13')">
+    <div class="ch-num">第 13 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">怎樣利用兩分鐘規則停止拖延</div>
+      <div class="ch-sub">門戶習慣．決定性時刻．先標準化，後優化</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">編舞家特懷拉·薩普每天早上叫計程車去健身房。她的儀式不是健身——<strong>是叫計程車</strong>。她告訴司機目的地的那一刻，習慣就完成了。<strong>決定性時刻</strong>是設定接下來一切軌跡的微小選擇。</div>
+      <div class="story-text"><strong>兩分鐘規則</strong>：開始一個新習慣時，應該花費不超過兩分鐘。「睡前閱讀」→「讀一頁」。「跑5公里」→「繫好跑鞋鞋帶」。目標是先建立習慣，再改進它。<strong>你無法優化一個不存在的習慣。</strong></div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「先標準化，後優化。你無法改善一個不存在的習慣。」</div>
+        <div class="quote-en">"Standardise before you optimise. You can't improve a habit that doesn't exist."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>決定性時刻</strong>——微小選擇設定接下來一切的軌跡。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>兩分鐘規則</strong>——任何新習慣都應該從花費兩分鐘或更少的版本開始。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>先標準化，後優化</strong>——先建立一致性；之後再提升質量。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">讓開始變得如此容易，以至於你找不到拒絕的藉口。兩分鐘就足以開始一切。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH14 -->
+<div class="ch" id="ch14">
+  <div class="ch-head" onclick="toggle('ch14')">
+    <div class="ch-num">第 14 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">怎樣讓好習慣不可避免，壞習慣難以養成</div>
+      <div class="ch-sub">承諾機制．一次性選擇．自動化美德</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">維克多·雨果承諾在截止日期前完成一本書，卻不斷被社交活動分心。他的解決辦法：讓助理鎖起他所有的衣服，只留一件大披肩，讓他沒有體面的衣服可以出門。<strong>被迫待在室內，他提前完成了《鐘樓怪人》。</strong>一個承諾機制移除了所有未來的決策。</div>
+      <div class="story-block">
+        一次性選擇，終身受益：<br>
+        💰 設定自動存款 → 每月永遠儲蓄<br>
+        🛒 從家裡移除垃圾食品 → 即使誘惑也吃不到<br>
+        📵 刪除社群媒體App → 永久減少無意識滑手機
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「破除壞習慣的最佳方法，是讓它在實踐上變得不可能。」</div>
+        <div class="quote-en">"The best way to break a bad habit is to make it impractical to do."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>承諾機制</strong>——現在做一個選擇，鎖定未來更好的行為。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>一次性選擇</strong>——無限期自動化好行為的單一決定。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>為未來的自己設計</strong>——未來的你會疲倦、受誘惑；現在就保護他。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">現在做一個決定，移除一千個未來的誘惑。自動化美德。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第四定律 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">第四定律 · 讓它令人愉悅</div><div class="part-line"></div></div>
+
+<!-- CH15 -->
+<div class="ch" id="ch15">
+  <div class="ch-head" onclick="toggle('ch15')">
+    <div class="ch-num">第 15 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">行為轉變的基本準則</div>
+      <div class="ch-sub">即時獎勵．延遲滿足．被獎勵的會被重複</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">公共衛生工作者史蒂芬·盧比嘗試一切方法改善喀拉蚩的洗手率——教育活動、免費肥皂。都沒效。然後寶鹼給了他一塊名為「Safeguard」的新肥皂，能豐富起泡並有好氣味。<strong>洗手率立刻飆升。</strong>這個習慣變得即時令人愉悅了。</div>
+      <div class="story-text">大腦為即時獎勵而進化——現在就吃，現在就活。但大多數好的現代習慣要在幾週或幾個月後才帶來回報。<strong>我們生活在延遲回報的世界，卻擁有即時回報的大腦。</strong>為了抵消這一點，給好習慣附加即時獎勵。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「被立即獎勵的行為會被重複。被立即懲罰的行為會被避免。」</div>
+        <div class="quote-en">"What is immediately rewarded is repeated. What is immediately punished is avoided."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>基本準則</strong>——被立即獎勵的行為會被重複；被立即懲罰的行為會被避免。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>給好習慣添加即時滿足感</strong>——獎勵不需要很大；只需要是即時的。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>讓壞習慣立即令人不滿</strong>——添加一個當下就能感受到的真實代價。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">給自己一個現在就感覺良好的理由。立即感到有回報的習慣才是持久的。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH16 -->
+<div class="ch" id="ch16">
+  <div class="ch-head" onclick="toggle('ch16')">
+    <div class="ch-num">第 16 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">怎樣天天保持好習慣</div>
+      <div class="ch-sub">習慣追蹤．絕不連續錯過兩次．視覺化進步</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">班傑明·富蘭克林在小筆記本裡追蹤13種美德，標記他每天未能做到的。他不是要追求完美——他是要<strong>清楚看到自己的行為並維持連勝紀錄</strong>。追蹤有效是因為它顯而易見（你能看到自己是否做了）、有吸引力（維持連勝會變得有動力）、令人愉悅（劃掉一天帶來即時滿足感）。</div>
+      <div class="story-text"><strong>「絕不連續錯過兩次」</strong>是最重要的習慣規則。每個人最終都會錯過一天。錯過一次是意外。錯過兩次是新壞習慣的開始。一次差勁的鍛煉勝過沒有鍛煉。一篇不完美的日記勝過空白頁。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「絕不連續錯過兩次。錯過一次是意外。錯過兩次是新習慣的開始。」</div>
+        <div class="quote-en">"Never miss twice. Missing once is an accident. Missing twice is the start of a new habit."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣追蹤</strong>——讓進步可見，創造滿足感，觸發維持連勝的欲望。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>絕不連續錯過兩次</strong>——錯過一天是意外；錯過兩天是新壞習慣的開始。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>恢復比完美更重要</strong>——你在錯過後多快回歸，決定長期成功。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">追蹤你的習慣。絕不連續錯過兩次。錯過一次是人之常情；錯過兩次是選擇。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH17 -->
+<div class="ch" id="ch17">
+  <div class="ch-head" onclick="toggle('ch17')">
+    <div class="ch-num">第 17 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">問責伙伴何以能改變一切</div>
+      <div class="ch-sub">習慣契約．社會責任．即時代價</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">哈佛教授羅傑·費雪提出一個關於核武的大膽想法：把發射密碼植入一個志願者的胸腔。如果總統想要發射，必須先親手殺死那個志願者才能取得密碼。費雪的重點：<strong>讓決定的代價變得即時和個人化，會戲劇性地改變行為。</strong>習慣契約應用了同樣的邏輯——寫下你的承諾，與伙伴商定真實後果，簽名。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「問責伙伴可以為不行動創造即時的代價。」</div>
+        <div class="quote-en">"An accountability partner can create an immediate cost to inaction."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣契約</strong>——有真實後果的書面承諾，讓壞行為立即付出代價。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>問責伙伴</strong>——社會覺察創造強大的動力來貫徹執行。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>讓壞習慣令人不滿</strong>——第四定律的逆向；現在就添加真實代價，不是未來。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">找一個會讓你負責的人。社會後果是行為改變最強大的力量之一。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 高級戰術 -->
+<div class="part-div"><div class="part-line"></div><div class="part-badge">高級戰術 · 從單純的好到真正的偉大</div><div class="part-line"></div></div>
+
+<!-- CH18 -->
+<div class="ch" id="ch18">
+  <div class="ch-head" onclick="toggle('ch18')">
+    <div class="ch-num">第 18 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">揭秘天才</div>
+      <div class="ch-sub">基因決定機會．先探索後深耕．創造你自己的賽局</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">菲爾普斯——6呎4吋翼展、短腿、超大手掌——為游泳量身打造的身體。希沙姆·格魯杰——為長跑而生。兩人都非凡卓越，但在完全不同的領域。<strong>基因不決定你的命運；它決定你的機會所在。</strong>找到你天生優勢能被放大的賽局。如果不存在這樣的賽局——就創造一個。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「基因不決定你的命運。它決定你的機會領域。」</div>
+        <div class="quote-en">"Genes do not determine your destiny. They determine your areas of opportunity."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>先探索，後深耕</strong>——先廣泛嘗試；找到你的優勢後，深入並複利它。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>創造你自己的賽局</strong>——以沒人能複製的方式組合獨特技能。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>在容易的事上努力工作</strong>——天生能力加上努力，複利速度快過純粹努力。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">找到你的優勢是優勢的賽局。然後比任何人都更努力地去玩它。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH19 -->
+<div class="ch" id="ch19">
+  <div class="ch-head" onclick="toggle('ch19')">
+    <div class="ch-num">第 19 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">金髮女孩準則</div>
+      <div class="ch-sub">最適挑戰．心流狀態．愛上無聊</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">想像和4歲孩子打網球——立刻無聊。和費德勒打——立刻絕望。和比你稍強一點的人打——<strong>你被吸引住了</strong>。最大動力出現在你當前能力的邊緣。大約比當前技能難4%是最佳挑戰區——<strong>心流</strong>的狀態。</div>
+      <div class="story-text">大多數習慣失敗不是因為太難——而是因為變成例行公事後失去新鮮感。<strong>無聊才是長期習慣維持的真正敵人。</strong>業餘者和專業者的區別：專業者在無聊時仍然出現。持續做無聊事情的能力是精通的基礎。</div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「成功最大的威脅不是失敗，而是無聊。」</div>
+        <div class="quote-en">"The greatest threat to success is not failure but boredom."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>金髮女孩準則</strong>——挑戰剛好超出當前能力（約4%）時，動力達到頂峰。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>無聊是敵人</strong>——大多數習慣失敗不是因為太難，而是變得例行化後失去吸引力。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>專業者仍然出現</strong>——在無聊時持續出現，是真正的競爭優勢。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">愛上無聊。在不興奮時仍然出現的能力，才是真正的技能。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CH20 -->
+<div class="ch" id="ch20">
+  <div class="ch-head" onclick="toggle('ch20')">
+    <div class="ch-num">第 20 章</div>
+    <div class="ch-meta">
+      <div class="ch-title">培養好習慣的負面影響</div>
+      <div class="ch-sub">習慣＋刻意練習＝精通．保持身份彈性</div>
+    </div>
+    <div class="ch-arr">▾</div>
+  </div>
+  <div class="ch-body">
+    <div class="section">
+      <div class="section-label">📖 故事摘要</div>
+      <div class="story-text">當行為變成自動化，你就停止有意識地關注它。這很有效率，但會製造盲點。<strong>幫你到達某個水準的習慣，可能阻止你進一步前進。</strong>精通需要更多東西：刻意練習——有意識地針對弱點，而不只是重複你已知的。</div>
+      <div class="story-text">最後的警告：不要過於緊緊抓住任何單一身份。<strong>「我是作家」</strong>很強大——但如果你一個月無法寫作，就會變得痛苦。保持身份寬泛：<strong>「我是一個重視創造力和學習的人」</strong>——這能在干擾中存活。最強大的自我版本能適應。</div>
+      <div class="story-block">
+        精通的公式：<br>
+        習慣處理基礎 → 自動化能力<br>
+        刻意練習推進邊界 → 持續成長<br>
+        定期反思防止漂移 → 與價值觀保持一致<br><br>
+        習慣 ＋ 刻意練習 ＝ 精通
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">💬 書中金句</div>
+      <div class="quote-item">
+        <div class="quote-zh">「習慣＋刻意練習＝精通。」</div>
+        <div class="quote-en">"Habits + Deliberate Practice = Mastery."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+      <div class="quote-item">
+        <div class="quote-zh">「我們越緊緊抓住一個身份，就越難超越它成長。」</div>
+        <div class="quote-en">"The tighter we cling to an identity, the harder it becomes to grow beyond it."</div>
+        <div class="quote-from">—— 詹姆斯．克利爾</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">🔑 核心重點</div>
+      <ul class="kp-list">
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>習慣製造盲點</strong>——行為自動化後，有意識的關注消退；這會阻礙進一步成長。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>安排反思</strong>——年度回顧和中期檢查，防止你從價值觀逐漸漂移。</div></li>
+        <li class="kp-item"><div class="kp-dot"></div><div class="kp-text"><strong>保持身份彈性</strong>——僵化的自我標籤會成為籠子；保持寬泛和適應性。</div></li>
+      </ul>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-label">⚡ 一句話帶走</div>
+      <div class="takeaway-text">習慣處理基礎。刻意練習建立精通。在身份成為籠子之前，審視它。</div>
+    </div>
+  </div>
+</div>
+
+<!-- GUMROAD CTA -->
+<div class="gumroad-cta">
+  <p>想要更深入的分析、個人應用框架，以及完整的閱讀後感筆記？</p>
+  <a class="gumroad-btn" href="https://embershallow.gumroad.com" target="_blank">在 Gumroad 取得完整筆記 ↗</a>
+</div>
+
+</div><!-- end .content -->
+
+<footer>
+  基於《原子習慣》James Clear 著 · 免費書摘 by Embershallow<br>
+  embershallow.com · embershallow.gumroad.com
+</footer>
+
+<script>
+function toggle(id) {
+  const ch = document.getElementById(id);
+  const body = ch.querySelector('.ch-body');
+  const isOpen = ch.classList.contains('open');
+  ch.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>
